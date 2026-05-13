@@ -8,7 +8,6 @@ def parse_date(date_str):
     else:
         raise Exception(f"ERROR: {date_str} is an invailed format")
     return parsed
-    
 
 def date_to_num(date_str):
     parsed = parse_date(date_str)
