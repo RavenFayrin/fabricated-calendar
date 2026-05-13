@@ -1,11 +1,4 @@
-class CalendarSystem:
-    def __init__(self, name, weekdays, months, eras):
-        self.name = name
-        self.weekdays = weekdays
-        self.months = months
-        self.eras = eras
-        
-class WeekDay:
+ class WeekDay:
     def __init__(self, id, name, order):
         self.id = id
         self.name = name
@@ -24,6 +17,17 @@ class Era:
         self.name = name
         self.order = order
         self.start_year = start_year
+
+class CalendarSystem:
+    def __init__(self, name, weekdays, months, eras):
+        self.name = name
+        self.weekdays = weekdays
+        self.months = months
+        self.eras = eras
+
+    #def date_to_num(self):
+
+    #def num_to_date(self):
 
 class Date:
     def __init__(self, calendar_system, era, year, month, day):
