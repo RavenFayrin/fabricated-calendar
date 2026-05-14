@@ -60,14 +60,21 @@ class TestCalendarSystem(unittest.TestCase):
             Date(self.calendar_system, 2507, 9, 27)
         ]
         sorted_date_list = self.calendar_system.sort_dates(date_list)
-        self.assertEqual(sorted_date_list, [
-            Date(self.calendar_system, 2498, 3, 25),
-            Date(self.calendar_system, 2506, 6, 7),
-            Date(self.calendar_system, 2507, 8, 3),
-            Date(self.calendar_system, 2507, 9, 16),
-            Date(self.calendar_system, 2507, 9, 27)
-        ]
-        )
+        self.assertEqual(sorted_date_list[0].year, 2498)
+        self.assertEqual(sorted_date_list[0].month, 3)
+        self.assertEqual(sorted_date_list[0].day, 25)
+        self.assertEqual(sorted_date_list[1].year, 2506)
+        self.assertEqual(sorted_date_list[1].month, 6)
+        self.assertEqual(sorted_date_list[1].day, 7)
+        self.assertEqual(sorted_date_list[2].year, 2507)
+        self.assertEqual(sorted_date_list[2].month, 8)
+        self.assertEqual(sorted_date_list[2].day, 3)
+        self.assertEqual(sorted_date_list[3].year, 2507)
+        self.assertEqual(sorted_date_list[3].month, 9)
+        self.assertEqual(sorted_date_list[3].day, 16)
+        self.assertEqual(sorted_date_list[4].year, 2507)
+        self.assertEqual(sorted_date_list[4].month, 9)
+        self.assertEqual(sorted_date_list[4].day, 27)
 
 if __name__ == '__main__':
     unittest.main()

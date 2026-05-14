@@ -55,9 +55,9 @@ class CalendarSystem:
         sorted_dates = []
         for date in dates:
             ab_dates.append(self.date_to_absolute_day(date))
-        sorted(ab_dates)
-        for ab_date in ab_dates:
-            sorted_dates.append(self.absolute_day_to_date(ab_date))
+        sorted_dates = sorted(ab_dates)
+        for i in range(len(sorted_dates)):
+            sorted_dates[i] = self.absolute_day_to_date(sorted_dates[i])
         return sorted_dates
 
 class Date:
