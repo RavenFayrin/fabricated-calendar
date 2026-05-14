@@ -43,5 +43,13 @@ class TestCalendarSystem(unittest.TestCase):
         self.assertEqual(date.month, 6)
         self.assertEqual(date.day, 7)
 
+    def test_len_between_dates(self):
+        early_date = Date(self.calendar_system, 2506, 6, 7)
+        later_date = Date(self.calendar_system, 2507, 9, 16)
+        time_between = self.calendar_system.len_between_dates(early_date, later_date)
+        self.assertEqual(time_between.year, 1)
+        self.assertEqual(time_between.month, 3)
+        self.assertEqual(time_between.day, 9)
+
 if __name__ == '__main__':
     unittest.main()
