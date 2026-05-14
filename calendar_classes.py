@@ -42,6 +42,12 @@ class CalendarSystem:
         day = absolute_day
         return Date(self, year, month, day)
 
+    def len_between_dates(self, early_date, later_date):
+        early_ab = date_to_absolute_day(early_date)
+        later_ab = date_to_absolute_day(later_date)
+        len_between = later_ab - early_ab
+        return absolute_day_to_date(len_between)
+
 class Date:
     def __init__(self, calendar_system, year, month, day):
         self.calendar_system = calendar_system
