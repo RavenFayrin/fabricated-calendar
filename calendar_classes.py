@@ -15,31 +15,31 @@ class CalendarSystem:
         self.weekdays = weekdays
         self.months = months
 
-    def date_to_num(self, date):
+    def date_to_absolute_day(self, date):
         days_in_year = 0
         for month in self.months:
             days_in_year += month.num_days
-        num = date.year * days_in_year
+        absolute_day = date.year * days_in_year
         for month in self.months:
             if month.order < date.month:
-                num += month.num_days
-        num += date.day
-        return num
+                absolute_day += month.num_days
+        absolute_day += date.day
+        return absolute_day
     
-    def num_to_date(self, num):
+    def absolute_day_to_date(self, absolute_day):
         days_in_year = 0
         for month in self.months:
             days_in_year += month.num_days
-        year = num // days_in_year
-        num = num % days_in_year
+        year = absolute_day // days_in_year
+        absolute_day = absolute_day % days_in_year
         month = 1
         for m in self.months:
-            if num >= m.num_days:
-                num -= m.num_days
+            if absolute_day >= m.num_days:
+                absolute_day -= m.num_days
                 month += 1
             else:
                 break
-        day = num
+        day = absolute_day
         return Date(self, year, month, day)
 
 class Date:
