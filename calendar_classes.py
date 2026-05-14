@@ -48,6 +48,16 @@ class CalendarSystem:
         len_between = later_ab - early_ab
         return absolute_day_to_date(len_between)
 
+    def sort_dates(self, dates):
+        ab_dates = []
+        sorted_dates = []
+        for date in dates:
+            ab_dates.append(date_to_absolute_day(date))
+        sorted(ab_dates)
+        for ab_date in ab_dates:
+            sorted_dates.append(absolute_day_to_date(ab_date))
+        return sorted_dates
+
 class Date:
     def __init__(self, calendar_system, year, month, day):
         self.calendar_system = calendar_system
