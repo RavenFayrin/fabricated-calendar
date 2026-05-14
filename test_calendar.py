@@ -51,5 +51,22 @@ class TestCalendarSystem(unittest.TestCase):
         self.assertEqual(time_between.month, 3)
         self.assertEqual(time_between.day, 9)
 
+    def test_sort_dates(self):
+        date_list = [
+            Date(self.calendar_system, 2507, 8, 3),
+            Date(self.calendar_system, 2506, 6, 7),
+            Date(self.calendar_system, 2507, 9, 16),
+            Date(self.calendar_system, 2498, 3, 25),
+            Date(self.calendar_system, 2507, 9, 27)
+        ]
+        sorted_date_list = self.calendar_system.sort_dates(date_list)
+        self.assertEqual(sorted_date_list, [
+            Date(self.calendar_system, 2498, 3, 25),
+            Date(self.calendar_system, 2506, 6, 7),
+            Date(self.calendar_system, 2507, 8, 3),
+            Date(self.calendar_system, 2507, 9, 16),
+            Date(self.calendar_system, 2507, 9, 27)
+        ]
+
 if __name__ == '__main__':
     unittest.main()
