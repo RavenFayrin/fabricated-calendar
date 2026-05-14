@@ -31,14 +31,14 @@ class TestCalendarSystem(unittest.TestCase):
                 ]
             )
 
-    def test_date_to_num(self):
+    def test_date_to_absolute_day(self):
         date = Date(self.calendar_system, 2506, 6, 7)
-        num = self.calendar_system.date_to_num(date)
-        self.assertEqual(num, 2506 * 360 + 150 + 7)
+        absolute_day = self.calendar_system.date_to_absolute_day(date)
+        self.assertEqual(absolute_day, 2506 * 360 + 150 + 7)
 
-    def test_num_to_date(self):
-        num = 2506 * 360 + 150 + 7
-        date = self.calendar_system.num_to_date(num)
+    def test_absolute_day_to_date(self):
+        absolute_day = 2506 * 360 + 150 + 7
+        date = self.calendar_system.absolute_day_to_date(absolute_day)
         self.assertEqual(date.year, 2506)
         self.assertEqual(date.month, 6)
         self.assertEqual(date.day, 7)
