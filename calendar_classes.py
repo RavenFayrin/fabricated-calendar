@@ -41,6 +41,11 @@ class CalendarSystem:
                 break
         day = absolute_day
         return Date(self, year, month, day)
+    
+    def get_weekday_name(self, date):
+        ab_date = self.date_to_absolute_day(date)
+        remainder = (ab_date % len(self.weekdays)) - 1
+        return self.weekdays[remainder].name
 
     def len_between_dates(self, early_date, later_date):
         early_ab = self.date_to_absolute_day(early_date)

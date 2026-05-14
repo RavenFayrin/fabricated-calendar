@@ -76,5 +76,10 @@ class TestCalendarSystem(unittest.TestCase):
         self.assertEqual(sorted_date_list[4].month, 9)
         self.assertEqual(sorted_date_list[4].day, 27)
 
+    def test_get_weekday_name(self):
+        date = Date(self.calendar_system, 0, 1, 3)
+        weekday_name = self.calendar_system.get_weekday_name(date)
+        self.assertEqual(weekday_name, "Teztor")
+
 if __name__ == '__main__':
     unittest.main()
