@@ -26,7 +26,21 @@ class CalendarSystem:
         num += date.day
         return num
     
-    #def num_to_date(self):
+    def num_to_date(self, num):
+        days_in_year = 0
+        for month in self.months:
+            days_in_year += month.num_days
+        year = num // days_in_year
+        num = num % days_in_year
+        month = 1
+        for m in self.months:
+            if num >= m.num_days:
+                num -= m.num_days
+                month += 1
+            else:
+                break
+        day = num
+        return Date(self, year, month, day)
 
 class Date:
     def __init__(self, calendar_system, year, month, day):
