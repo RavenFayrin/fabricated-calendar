@@ -67,6 +67,7 @@ class TestCalendarSystem(unittest.TestCase):
             Date(self.calendar_system, 2507, 9, 16),
             Date(self.calendar_system, 2507, 9, 27)
         ]
+        )
 
 if __name__ == '__main__':
     unittest.main()

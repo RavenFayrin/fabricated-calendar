@@ -43,19 +43,21 @@ class CalendarSystem:
         return Date(self, year, month, day)
 
     def len_between_dates(self, early_date, later_date):
-        early_ab = date_to_absolute_day(early_date)
-        later_ab = date_to_absolute_day(later_date)
+        early_ab = self.date_to_absolute_day(early_date)
+        later_ab = self.date_to_absolute_day(later_date)
         len_between = later_ab - early_ab
-        return absolute_day_to_date(len_between)
+        len_between = self.absolute_day_to_date(len_between)
+        len_between.month -= 1
+        return len_between
 
     def sort_dates(self, dates):
         ab_dates = []
         sorted_dates = []
         for date in dates:
-            ab_dates.append(date_to_absolute_day(date))
+            ab_dates.append(self.date_to_absolute_day(date))
         sorted(ab_dates)
         for ab_date in ab_dates:
-            sorted_dates.append(absolute_day_to_date(ab_date))
+            sorted_dates.append(self.absolute_day_to_date(ab_date))
         return sorted_dates
 
 class Date:
