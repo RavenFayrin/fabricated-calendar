@@ -40,7 +40,7 @@ class TestCalendarSystem(unittest.TestCase):
     def test_absolute_day_to_date(self):
         absolute_day = 2026 * 365 + 1
         date = self.calendar_system.absolute_day_to_date(absolute_day)
-        self.assertEqual(date, Date(self.calendar_system, 2026, 1, 1)
+        self.assertEqual(date, Date(self.calendar_system, 2026, 1, 1))
 
     def test_get_num_days(self):
         early_date = Date(self.calendar_system, 2025, 6, 7)
