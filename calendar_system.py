@@ -39,14 +39,6 @@ class CalendarSystem:
         remainder = (ab_date % len(self.weekdays)) - 1
         return self.weekdays[remainder].name
 
-    def len_between_dates(self, early_date, later_date):
-        early_ab = self.date_to_absolute_day(early_date)
-        later_ab = self.date_to_absolute_day(later_date)
-        len_between = later_ab - early_ab
-        len_between = self.absolute_day_to_date(len_between)
-        len_between.month -= 1
-        return len_between
-
     def sort_dates(self, dates):
         ab_dates = []
         sorted_dates = []
@@ -56,3 +48,13 @@ class CalendarSystem:
         for i in range(len(sorted_dates)):
             sorted_dates[i] = self.absolute_day_to_date(sorted_dates[i])
         return sorted_dates
+    
+    def get_num_days(self, early_date, later_date):
+        early_ab = self.date_to_absolute_day(early_date)
+        later_ab = self.date_to_absolute_day(later_date)
+        return later_ab - early_ab
+
+    def formatted_time_between_days(self, early_date, later_date):
+        num_days = self.get_num_days(early_date, later_date)
+        #turn days in to time and return as a formated string
+        return 
