@@ -32,6 +32,14 @@ class TestCalendarSystem(unittest.TestCase):
                 ]
             )
 
+    def test_get_num_days_in_year(self):
+        num_days = self.calendar_system.get_num_days_in_year()
+        self.assertEqual(num_days, 365)
+
+    def test_get_num_weeks_in_year(self):
+        num_weeks = self.calendar_system.get_num_weeks_in_year()
+        self.assertEqual(num_weeks, 52)
+
     def test_date_to_absolute_day(self):
         date = Date(self.calendar_system, 2026, 1, 1)
         absolute_day = self.calendar_system.date_to_absolute_day(date)
@@ -42,10 +50,10 @@ class TestCalendarSystem(unittest.TestCase):
         date = self.calendar_system.absolute_day_to_date(absolute_day)
         self.assertEqual(date, Date(self.calendar_system, 2026, 1, 1))
 
-    def test_get_num_days(self):
+    def test_get_ab_days(self):
         early_date = Date(self.calendar_system, 2025, 6, 7)
         later_date = Date(self.calendar_system, 2026, 9, 16)
-        days_between = self.calendar_system.get_num_days(early_date, later_date)
+        days_between = self.calendar_system.get_ab_days(early_date, later_date)
         self.assertEqual(days_between, 466)
 
     def test_sort_dates(self):
@@ -71,6 +79,12 @@ class TestCalendarSystem(unittest.TestCase):
         date = Date(self.calendar_system, 0, 1, 3)
         weekday_name = self.calendar_system.get_weekday_name(date)
         self.assertEqual(weekday_name, "WD3")
+
+    def test_formatted_time_between_days(self):
+        early_date = Date(self.calendar_system, 2025, 6, 7)
+        later_date = Date(self.calendar_system, 2026, 9, 16)
+        formatted_time = self.calendar_system.formatted_time_between_days(early_date, later_date)
+        self.assertEqual(formatted_time, "1 year(s), 2 month(s), 39 day(s)")
 
 if __name__ == '__main__':
     unittest.main()
