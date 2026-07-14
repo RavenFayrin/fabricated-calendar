@@ -76,14 +76,10 @@ func (cs *CalendarSystem) WeekdayName(date *Date) string {
 	return cs.Weekdays[remainder].Name
 }
 
-func (cs *CalendarSystem) SortDates(dates []*Date) []*Date {
-
+func (cs *CalendarSystem) SortDates(dates []*Date) {
 	sort.Slice(dates, func(i, j int) bool {
-		return cs.DateToAbsoluteDay(dates[i]) <
-			cs.DateToAbsoluteDay(dates[j])
+		return dates[i].Before(dates[j])
 	})
-
-	return dates
 }
 
 func (cs *CalendarSystem) DaysBetween(a, b *Date) int {

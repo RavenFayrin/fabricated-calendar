@@ -55,3 +55,11 @@ func (cs *CalendarSystem) GetMonth(month interface{}) (*Month, error) {
 
 	return nil, fmt.Errorf("invalid month")
 }
+
+func (d *Date) AbsoluteDay() int {
+	return d.Calendar.DateToAbsoluteDay(d)
+}
+
+func (d *Date) Before(other *Date) bool {
+	return d.AbsoluteDay() < other.AbsoluteDay()
+}
