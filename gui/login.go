@@ -15,10 +15,13 @@ func (g *GUI) ShowLogin() {
 	password.SetPlaceHolder("Password")
 
 	loginButton := widget.NewButton("Login", func() {
-		err := auth.Login(g.Config, username.Text, password.Text)
+		match, err := auth.Login(g.Config, username.Text, password.Text)
 		if err != nil {
 			g.showError("Unable to login. Please check email and password.", err)
 			return
+		}
+		if match == true {
+			g.showCalendarSelection()
 		}
 	})
 
