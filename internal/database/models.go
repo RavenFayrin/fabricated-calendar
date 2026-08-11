@@ -5,10 +5,20 @@
 package database
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
 )
+
+type Universe struct {
+	ID          uuid.UUID
+	Name        string
+	Description sql.NullString
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	UserID      uuid.UUID
+}
 
 type User struct {
 	ID             uuid.UUID
