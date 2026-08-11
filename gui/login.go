@@ -16,7 +16,6 @@ func (g *GUI) ShowLogin() {
 
 	loginButton := widget.NewButton("Login", func() {
 		err := auth.Login(g.Config, username.Text, password.Text)
-
 		if err != nil {
 			g.showError("Unable to login. Please check email and password.", err)
 			return
@@ -24,7 +23,7 @@ func (g *GUI) ShowLogin() {
 	})
 
 	createUserButton := widget.NewButton("Create New User", func() {
-		//ShowCreateUser(g.Window)
+		g.ShowCreateUser()
 	})
 
 	content := container.NewVBox(
