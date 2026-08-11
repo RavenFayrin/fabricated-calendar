@@ -1,16 +1,14 @@
 package gui
 
 import (
-	"fabricated-calendar/config"
 	"fabricated-calendar/internal/auth"
 
-	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
 
-func ShowLogin(window fyne.Window, cfg config.Config) {
+func (g *GUI) ShowLogin() {
 	email := widget.NewEntry()
 	email.SetPlaceHolder("Email")
 
@@ -18,10 +16,10 @@ func ShowLogin(window fyne.Window, cfg config.Config) {
 	password.SetPlaceHolder("Password")
 
 	loginButton := widget.NewButton("Login", func() {
-		err := auth.Login(cfg, email.Text, password.Text)
+		err := auth.Login(g.Config, email.Text, password.Text)
 
 		if err != nil {
-			dialog.ShowError(err, window)
+			dialog.ShowError(err, g.Window)
 			return
 		}
 	})
@@ -38,5 +36,5 @@ func ShowLogin(window fyne.Window, cfg config.Config) {
 		createUserButton,
 	)
 
-	window.SetContent(content)
+	g.Window.SetContent(content)
 }

@@ -6,10 +6,22 @@ import (
 	"fyne.io/fyne/v2"
 )
 
+type GUI struct {
+	App    fyne.App
+	Window fyne.Window
+	Config config.Config
+}
+
 func Start(app fyne.App, cfg config.Config) {
 	window := app.NewWindow("Fabricated Calendar")
 
-	ShowLogin(window, cfg)
+	gui := GUI{
+		App:    app,
+		Window: window,
+		Config: cfg,
+	}
 
-	window.ShowAndRun()
+	gui.ShowLogin()
+
+	gui.Window.ShowAndRun()
 }
