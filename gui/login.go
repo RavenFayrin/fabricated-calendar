@@ -21,7 +21,7 @@ func (g *GUI) ShowLogin() {
 			return
 		}
 		if match == true {
-			g.showCalendarSelection()
+			g.showUniverseSelector()
 		}
 	})
 
