@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/widget"
+)
 
 func main() {
-	fmt.Println("Welcome to Fabricated Calendar!")
+	a := app.New()
+	w := a.NewWindow("Fabricated Calendar")
+
+	w.SetContent(widget.NewLabel("Welcome to Fabricated Calendar!"))
+	w.ShowAndRun()
 }
