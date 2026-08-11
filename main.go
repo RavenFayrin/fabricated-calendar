@@ -7,6 +7,7 @@ import (
 
 	"fyne.io/fyne/v2/app"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 
 	"fabricated-calendar/config"
 	"fabricated-calendar/gui"
@@ -15,9 +16,9 @@ import (
 
 func main() {
 	godotenv.Load()
-	dbURL := os.Getenv("DB_URL")
+	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
-		log.Fatal("DB_URL must be set")
+		log.Fatal("DATABASE_URL must be set")
 	}
 
 	dbConn, err := sql.Open("postgres", dbURL)
@@ -30,7 +31,7 @@ func main() {
 		DB: dbQueries,
 	}
 
-	app := app.New()
+	app := app.NewWithID("com.ravenfayrin.fabricatedcalendar")
 
 	gui.Start(app, cfg)
 }
