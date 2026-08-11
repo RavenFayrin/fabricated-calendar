@@ -1,8 +1,12 @@
 package auth
 
-import "github.com/alexedwards/argon2id"
+import (
+	"errors"
+	"strings"
 
-// HashPassword -
+	"github.com/alexedwards/argon2id"
+)
+
 func HashPassword(password string) (string, error) {
 	hash, err := argon2id.CreateHash(password, argon2id.DefaultParams)
 	if err != nil {
@@ -11,11 +15,22 @@ func HashPassword(password string) (string, error) {
 	return hash, nil
 }
 
-// CheckPasswordHash -
-func CheckPasswordHash(password, hash string) (bool, error) {
+func CheckPasswordHash(password string, hash string) (bool, error) {
 	match, err := argon2id.ComparePasswordAndHash(password, hash)
 	if err != nil {
 		return false, err
 	}
 	return match, nil
+}
+
+func CheckEmailValidation(email string) error {
+	parts := strings.Split(email, "@")
+	if len(parts) != 2 {
+		return errors.New("Email missing @")
+	}
+	parts = append(strings.Split(parts[1], "."))
+	if len(parts) != 3 {
+		return errors.New("Email missing .")
+	}
+	return nil
 }
