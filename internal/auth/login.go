@@ -6,8 +6,8 @@ import (
 	"fabricated-calendar/config"
 )
 
-func Login(cfg config.Config, email string, password string) error {
-	user, err := cfg.DB.GetUserByEmail(context.Background(), email)
+func Login(cfg config.Config, username string, password string) error {
+	user, err := cfg.DB.GetUserByUsername(context.Background(), username)
 	if err != nil {
 		return err
 	}

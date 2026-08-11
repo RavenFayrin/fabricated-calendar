@@ -8,14 +8,14 @@ import (
 )
 
 func (g *GUI) ShowLogin() {
-	email := widget.NewEntry()
-	email.SetPlaceHolder("Email")
+	username := widget.NewEntry()
+	username.SetPlaceHolder("Username")
 
 	password := widget.NewPasswordEntry()
 	password.SetPlaceHolder("Password")
 
 	loginButton := widget.NewButton("Login", func() {
-		err := auth.Login(g.Config, email.Text, password.Text)
+		err := auth.Login(g.Config, username.Text, password.Text)
 
 		if err != nil {
 			g.showError("Unable to login. Please check email and password.", err)
@@ -24,12 +24,12 @@ func (g *GUI) ShowLogin() {
 	})
 
 	createUserButton := widget.NewButton("Create New User", func() {
-		//ShowCreateUser(window)
+		//ShowCreateUser(g.Window)
 	})
 
 	content := container.NewVBox(
 		widget.NewLabel("Fabricated Calendar"),
-		email,
+		username,
 		password,
 		loginButton,
 		createUserButton,

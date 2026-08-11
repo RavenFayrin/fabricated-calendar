@@ -1,14 +1,15 @@
 -- name: CreateUser :one
-INSERT INTO users (id, created_at, updated_at, email, hashed_password)
+INSERT INTO users (id, username, hashed_password, email, created_at, updated_at)
 VALUES (
     gen_random_uuid(),
-    NOW(),
-    NOW(),
     $1,
-    $2
+    $2,
+    $3,
+    NOW(),
+    NOW()
 )
 RETURNING *;
 
--- name: GetUserByEmail :one
+-- name: GetUserByUsername :one
 SELECT * FROM users
-WHERE email = $1;
+WHERE username = $1;
