@@ -28,8 +28,7 @@ func CheckEmailValidation(email string) error {
 	if len(parts) != 2 {
 		return errors.New("Email missing @")
 	}
-	parts = append(strings.Split(parts[1], "."))
-	if len(parts) != 3 {
+	if !strings.Contains(parts[1], ".") {
 		return errors.New("Email missing .")
 	}
 	return nil
