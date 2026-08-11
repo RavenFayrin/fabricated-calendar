@@ -4,7 +4,6 @@ import (
 	"fabricated-calendar/internal/auth"
 
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -19,7 +18,7 @@ func (g *GUI) ShowLogin() {
 		err := auth.Login(g.Config, email.Text, password.Text)
 
 		if err != nil {
-			dialog.ShowError(err, g.Window)
+			g.showError("Unable to login. Please check email and password.", err)
 			return
 		}
 	})
