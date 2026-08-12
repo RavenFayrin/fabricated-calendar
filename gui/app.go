@@ -23,7 +23,7 @@ func Start(app fyne.App, cfg config.Config) {
 		Config: cfg,
 	}
 
-	gui.ShowLogin()
+	gui.showLogin()
 
 	gui.Window.ShowAndRun()
 }
