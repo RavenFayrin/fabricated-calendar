@@ -3,16 +3,17 @@ package auth
 import (
 	"context"
 	"fabricated-calendar/config"
+	"fabricated-calendar/internal/database"
 )
 
-func Login(cfg config.Config, username string, password string) (bool, error) {
+func Login(cfg config.Config, username string, password string) (database.User, error) {
 	user, err := cfg.DB.GetUserByUsername(context.Background(), username)
 	if err != nil {
-		return false, err
+		return database.User{}, err
 	}
-	match, err := CheckPasswordHash(password, user.HashedPassword)
+	_, err = CheckPasswordHash(password, user.HashedPassword)
 	if err != nil {
-		return false, err
+		return database.User{}, err
 	}
-	return match, nil
+	return user, nil
 }

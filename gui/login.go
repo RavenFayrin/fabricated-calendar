@@ -15,12 +15,12 @@ func (g *GUI) ShowLogin() {
 	password.SetPlaceHolder("Password")
 
 	loginButton := widget.NewButton("Login", func() {
-		match, err := auth.Login(g.Config, username.Text, password.Text)
+		user, err := auth.Login(g.Config, username.Text, password.Text)
 		if err != nil {
 			g.showError("Unable to login. Please check email and password.", err)
 			return
-		}
-		if match == true {
+		} else {
+			g.User = &user
 			g.showUniverseSelector()
 		}
 	})
@@ -31,7 +31,9 @@ func (g *GUI) ShowLogin() {
 
 	content := container.NewVBox(
 		widget.NewLabel("Fabricated Calendar"),
+		widget.NewLabel("Username"),
 		username,
+		widget.NewLabel("Password"),
 		password,
 		loginButton,
 		createUserButton,
