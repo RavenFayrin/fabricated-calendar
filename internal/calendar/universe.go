@@ -7,7 +7,7 @@ import (
 	"fabricated-calendar/internal/database"
 )
 
-func universeCreate(cfg config.Config, user database.User, name string, description string) (bool, error) {
+func UniverseCreate(cfg config.Config, user database.User, name string, description string) (bool, error) {
 	desc := sql.NullString{}
 
 	switch description {
@@ -34,7 +34,7 @@ func universeCreate(cfg config.Config, user database.User, name string, descript
 	return true, nil
 }
 
-func universesGetByUserId(cfg config.Config, user database.User) (universes []database.Universe, err error) {
+func UniversesGetByUserId(cfg config.Config, user database.User) (universes []database.Universe, err error) {
 	universes, err = cfg.DB.GetUniversesByUserId(context.Background(), user.ID)
 	if err != nil {
 		return nil, err
