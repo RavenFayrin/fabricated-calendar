@@ -21,7 +21,7 @@ func (g *GUI) ShowLogin() {
 			return
 		} else {
 			g.User = &user
-			g.showUniverseSelector()
+			g.universeScreen()
 		}
 	})
 
@@ -31,9 +31,7 @@ func (g *GUI) ShowLogin() {
 
 	content := container.NewVBox(
 		widget.NewLabel("Fabricated Calendar"),
-		widget.NewLabel("Username"),
 		username,
-		widget.NewLabel("Password"),
 		password,
 		loginButton,
 		createUserButton,
