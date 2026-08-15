@@ -10,6 +10,10 @@ VALUES (
 )
 RETURNING *;
 
+-- name: DeleteUniverse :exec
+DELETE FROM universe
+WHERE id = $1;
+
 -- name: GetUniversesByUserId :many
 SELECT * FROM universe
 WHERE user_id = $1;

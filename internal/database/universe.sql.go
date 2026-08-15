@@ -45,6 +45,16 @@ func (q *Queries) CreateUniverse(ctx context.Context, arg CreateUniverseParams) 
 	return i, err
 }
 
+const deleteUniverse = `-- name: DeleteUniverse :exec
+DELETE FROM universe
+WHERE id = $1
+`
+
+func (q *Queries) DeleteUniverse(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, deleteUniverse, id)
+	return err
+}
+
 const getUniversesByUserId = `-- name: GetUniversesByUserId :many
 SELECT id, name, description, created_at, updated_at, user_id FROM universe
 WHERE user_id = $1
