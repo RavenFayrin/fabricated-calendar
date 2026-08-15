@@ -157,5 +157,5 @@ func (g *GUI) universeCreationForm(onCreated func()) *fyne.Container {
 		},
 	}
 
-	return container.NewCenter(form)
+	return container.NewWithoutLayout(form)
 }

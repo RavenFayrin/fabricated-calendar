@@ -5,7 +5,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -30,60 +29,37 @@ func (g *GUI) showLogin() {
 			return
 		}
 
-		// Store the logged-in user.
 		g.User = &user
 
-		// Actually display the universe selection screen.
 		g.Window.SetContent(g.universeScreen())
 	})
 
 	createUserButton := widget.NewButton("Create New User", func() {
-		g.showUserCreationPopup()
+		g.showUserCreation()
 	})
 
-	content := container.NewVBox(
-		widget.NewLabel("Fabricated Calendar"),
+	content := container.NewPadded(container.NewVBox(
+		widget.NewLabelWithStyle(
+			"Fabricated Calendar",
+			fyne.TextAlignCenter,
+			fyne.TextStyle{Bold: true},
+		),
 		username,
 		password,
 		loginButton,
 		createUserButton,
-	)
+	))
 
-	g.Window.SetContent(
-		container.NewCenter(content),
-	)
+	g.Window.SetContent(content)
 }
 
-// showUserCreationPopup opens the user creation form.
-func (g *GUI) showUserCreationPopup() {
-	var userDialog *dialog.CustomDialog
+func (g *GUI) showUserCreation() {
+	content := g.userCreationForm()
 
-	form := g.userCreationForm(
-		func() {
-			// Submit successfully created the user.
-			userDialog.Hide()
-		},
-		func() {
-			// Cancel clears the form and closes the popup.
-			userDialog.Hide()
-		},
-	)
-
-	userDialog = dialog.NewCustom(
-		"Create New User",
-		"Close",
-		form,
-		g.Window,
-	)
-
-	userDialog.Show()
+	g.Window.SetContent(content)
 }
 
-// userCreationForm creates the user creation form.
-func (g *GUI) userCreationForm(
-	onSubmit func(),
-	onCancel func(),
-) *fyne.Container {
+func (g *GUI) userCreationForm() *fyne.Container {
 	username := widget.NewEntry()
 	username.SetPlaceHolder("Username")
 
@@ -93,57 +69,37 @@ func (g *GUI) userCreationForm(
 	email := widget.NewEntry()
 	email.SetPlaceHolder("Email: example@example.com")
 
-	form := &widget.Form{
-		Items: []*widget.FormItem{
-			{
-				Text:   "Username",
-				Widget: username,
-			},
-			{
-				Text:   "Password",
-				Widget: password,
-			},
-			{
-				Text:   "Email",
-				Widget: email,
-			},
-		},
+	submitButton := widget.NewButton("Create User", func() {
+		err := auth.CreateUser(
+			g.Config,
+			username.Text,
+			password.Text,
+			email.Text,
+		)
+		if err != nil {
+			g.showError("Unable to create user.", err)
+			return
+		}
 
-		OnSubmit: func() {
-			err := auth.CreateUser(
-				g.Config,
-				username.Text,
-				password.Text,
-				email.Text,
-			)
-			if err != nil {
-				g.showError("Unable to create user.", err)
-				return
-			}
+		g.showLogin()
+	})
 
-			// Clear the form.
-			username.SetText("")
-			password.SetText("")
-			email.SetText("")
+	closeButton := widget.NewButton("Close", func() {
+		g.showLogin()
+	})
 
-			// Close the popup.
-			if onSubmit != nil {
-				onSubmit()
-			}
-		},
+	content := container.NewVBox(
+		widget.NewLabelWithStyle(
+			"Create New User",
+			fyne.TextAlignCenter,
+			fyne.TextStyle{Bold: true},
+		),
+		username,
+		password,
+		email,
+		submitButton,
+		closeButton,
+	)
 
-		OnCancel: func() {
-			// Clear the form.
-			username.SetText("")
-			password.SetText("")
-			email.SetText("")
-
-			// Close the popup.
-			if onCancel != nil {
-				onCancel()
-			}
-		},
-	}
-
-	return container.NewCenter(form)
+	return content
 }
