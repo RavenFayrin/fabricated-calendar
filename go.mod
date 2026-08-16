@@ -11,6 +11,8 @@ require (
 
 require (
 	github.com/FyshOS/fancyfs v0.0.1 // indirect
+	github.com/lusingander/colorpicker v0.7.1 // indirect
+	github.com/lusingander/fyne-theme-generator v0.2.3 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
 )
 
