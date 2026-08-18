@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type Universe struct {
+type Calendar struct {
 	ID          uuid.UUID
 	Name        string
 	Description sql.NullString
@@ -27,4 +27,14 @@ type User struct {
 	Email          string
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
+}
+
+type Weekday struct {
+	ID         uuid.UUID
+	Name       string
+	DayOrder   int32
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	CalendarID uuid.UUID
+	UserID     uuid.UUID
 }
