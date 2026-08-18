@@ -31,7 +31,7 @@ func (g *GUI) showLogin() {
 
 		g.User = &user
 
-		g.Window.SetContent(g.universeScreen())
+		g.showCalendar()
 	})
 
 	createUserButton := widget.NewButton("Create New User", func() {
