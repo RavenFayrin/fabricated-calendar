@@ -9,10 +9,11 @@ import (
 )
 
 type GUI struct {
-	App    fyne.App
-	Window fyne.Window
-	Config config.Config
-	User   *database.User
+	App      fyne.App
+	Window   fyne.Window
+	Config   config.Config
+	User     *database.User
+	Calendar *database.Calendar
 }
 
 func Start(app fyne.App, cfg config.Config) {
