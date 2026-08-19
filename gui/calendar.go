@@ -8,12 +8,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-//import "fyne.io/fyne/v2/container"
-
 func (g *GUI) showCalendar() {
 	top_content := g.topSide()
-	//left_content := //
-	//middle_content := //
 
 	content := container.NewBorder(top_content, nil, nil, nil, nil)
 
