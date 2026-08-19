@@ -2,6 +2,7 @@ package gui
 
 import (
 	"fabricated-calendar/config"
+	"fabricated-calendar/gui/theme"
 	"fabricated-calendar/internal/database"
 
 	"fyne.io/fyne/v2"
@@ -15,7 +16,7 @@ type GUI struct {
 }
 
 func Start(app fyne.App, cfg config.Config) {
-	app.Settings().SetTheme(&DefaultTheme{})
+	app.Settings().SetTheme(theme.DefaultTheme{})
 	window := app.NewWindow("Fabricated Calendar")
 
 	gui := GUI{
