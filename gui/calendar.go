@@ -2,6 +2,7 @@ package gui
 
 import (
 	"fabricated-calendar/internal/calendar"
+	"fabricated-calendar/internal/database"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -21,8 +22,15 @@ func (g *GUI) topSide() fyne.CanvasObject {
 		g.showCalendarForm()
 	})
 
+	createLogoutButton := widget.NewButton("Log Out", func() {
+		g.User = &database.User{}
+		g.Calendar = &database.Calendar{}
+		g.showLogin()
+	})
+
 	content := container.NewHBox(
 		createCalendarButton,
+		createLogoutButton,
 	)
 
 	return content
