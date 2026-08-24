@@ -3,10 +3,12 @@ package gui
 import (
 	"fabricated-calendar/internal/calendar"
 	"fabricated-calendar/internal/database"
+	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"github.com/google/uuid"
 )
 
 func (g *GUI) showCalendar() {
@@ -22,14 +24,14 @@ func (g *GUI) topSide() fyne.CanvasObject {
 	dbCalendars := g.getCalendars()
 
 	calendarNames := make([]string, 0, len(dbCalendars))
-	for _, cal := range dbCalendars {
-		calendarNames = append(calendarNames, cal.Name)
+	for i := range dbCalendars {
+		calendarNames = append(calendarNames, dbCalendars[i].Name)
 	}
 
 	calendarSelect := widget.NewSelect(calendarNames, func(value string) {
-		for _, cal := range dbCalendars {
-			if cal.Name == value {
-				g.Calendar = &cal
+		for i := range dbCalendars {
+			if dbCalendars[i].Name == value {
+				g.Calendar = &dbCalendars[i]
 				break
 			}
 		}
@@ -39,29 +41,37 @@ func (g *GUI) topSide() fyne.CanvasObject {
 		g.showCalendarForm()
 	})
 
-	accountOptions := []string{
-		"Account Settings",
-		"Log Out",
-	}
-
-	accountSelect := widget.NewSelect(accountOptions, func(value string) {
-		switch value {
-		case "Account Settings":
-			g.showAccountSettings()
-
-		case "Log Out":
-			g.User = &database.User{}
-			g.Calendar = &database.Calendar{}
-			g.showLogin()
-		default:
-			// User's name was selected; do nothing.
+	deleteCalendarButton := widget.NewButton("Delete Calendar", func() {
+		if g.Calendar == nil || g.Calendar.ID == uuid.Nil {
+			g.showError("Calendar not selected.", fmt.Errorf("no calendar selected"))
+			return
 		}
+
+		err := calendar.DeleteCalendar(g.Config, g.Calendar.ID)
+		if err != nil {
+			g.showError("Could not delete calendar.", err)
+		}
+
+		g.Calendar = &database.Calendar{}
+		g.showCalendar()
+	})
+
+	logoutButton := widget.NewButton("Log Out", func() {
+		g.User = &database.User{}
+		g.Calendar = &database.Calendar{}
+		g.showLogin()
 	})
 
 	content := container.NewHBox(
+		widget.NewLabelWithStyle(
+			"Calendar: ",
+			fyne.TextAlignCenter,
+			fyne.TextStyle{Bold: true},
+		),
 		calendarSelect,
 		createCalendarButton,
-		accountSelect,
+		deleteCalendarButton,
+		logoutButton,
 	)
 
 	return content
@@ -136,8 +146,4 @@ func (g *GUI) calendarCreatationForm() *fyne.Container {
 	))
 
 	return content
-}
-
-func (g *GUI) showAccountSettings() {
-
 }
