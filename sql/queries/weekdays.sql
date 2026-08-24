@@ -11,12 +11,18 @@ VALUES (
 )
 RETURNING *;
 
--- name: DeleteWeekday :exec
-DELETE FROM weekday
-WHERE id = $1;
-
 -- name: GetWeekdaysByCalendarId :many
 SELECT *
 FROM weekday
 WHERE calendar_id = $1
 ORDER BY day_order ASC;
+
+-- name: UpdateWeekdayById :one
+UPDATE weekday
+SET name = $1, day_order = $2, updated_at = NOW()
+WHERE id = $3
+RETURNING *;
+
+-- name: DeleteWeekday :exec
+DELETE FROM weekday
+WHERE id = $1;
