@@ -11,8 +11,9 @@ import (
 
 func (g *GUI) showCalendar() {
 	top_content := g.topSide()
+	left_content := g.leftSide()
 
-	content := container.NewBorder(top_content, nil, nil, nil, nil)
+	content := container.NewBorder(top_content, nil, left_content, nil, nil)
 
 	g.Window.SetContent(content)
 }
@@ -38,23 +39,46 @@ func (g *GUI) topSide() fyne.CanvasObject {
 		g.showCalendarForm()
 	})
 
-	createLogoutButton := widget.NewButton("Log Out", func() {
-		g.User = &database.User{}
-		g.Calendar = &database.Calendar{}
-		g.showLogin()
+	accountOptions := []string{
+		"Account Settings",
+		"Log Out",
+	}
+
+	accountSelect := widget.NewSelect(accountOptions, func(value string) {
+		switch value {
+		case "Account Settings":
+			g.showAccountSettings()
+
+		case "Log Out":
+			g.User = &database.User{}
+			g.Calendar = &database.Calendar{}
+			g.showLogin()
+		default:
+			// User's name was selected; do nothing.
+		}
 	})
 
 	content := container.NewHBox(
 		calendarSelect,
 		createCalendarButton,
-		createLogoutButton,
+		accountSelect,
 	)
 
 	return content
 }
 
-func (g *GUI) leftSide() {
+func (g *GUI) leftSide() fyne.CanvasObject {
+	title := widget.NewLabelWithStyle(
+		"Calendar Tools",
+		fyne.TextAlignCenter,
+		fyne.TextStyle{Bold: true},
+	)
 
+	content := container.NewVBox(
+		title,
+	)
+
+	return content
 }
 
 func (g *GUI) getCalendars() []database.Calendar {
@@ -112,4 +136,8 @@ func (g *GUI) calendarCreatationForm() *fyne.Container {
 	))
 
 	return content
+}
+
+func (g *GUI) showAccountSettings() {
+
 }
