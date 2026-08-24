@@ -104,3 +104,38 @@ func (q *Queries) GetMonthsByCalendarId(ctx context.Context, calendarID uuid.UUI
 	}
 	return items, nil
 }
+
+const updateMonthById = `-- name: UpdateMonthById :one
+UPDATE month
+SET name = $1, month_order = $2, days_in_month = $3, updated_at = NOW()
+WHERE id = $4
+RETURNING id, name, month_order, days_in_month, created_at, updated_at, calendar_id, user_id
+`
+
+type UpdateMonthByIdParams struct {
+	Name        string
+	MonthOrder  int32
+	DaysInMonth int32
+	ID          uuid.UUID
+}
+
+func (q *Queries) UpdateMonthById(ctx context.Context, arg UpdateMonthByIdParams) (Month, error) {
+	row := q.db.QueryRowContext(ctx, updateMonthById,
+		arg.Name,
+		arg.MonthOrder,
+		arg.DaysInMonth,
+		arg.ID,
+	)
+	var i Month
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.MonthOrder,
+		&i.DaysInMonth,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.CalendarID,
+		&i.UserID,
+	)
+	return i, err
+}

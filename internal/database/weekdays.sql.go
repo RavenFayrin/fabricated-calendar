@@ -99,3 +99,31 @@ func (q *Queries) GetWeekdaysByCalendarId(ctx context.Context, calendarID uuid.U
 	}
 	return items, nil
 }
+
+const updateWeekdayById = `-- name: UpdateWeekdayById :one
+UPDATE weekday
+SET name = $1, day_order = $2, updated_at = NOW()
+WHERE id = $3
+RETURNING id, name, day_order, created_at, updated_at, calendar_id, user_id
+`
+
+type UpdateWeekdayByIdParams struct {
+	Name     string
+	DayOrder int32
+	ID       uuid.UUID
+}
+
+func (q *Queries) UpdateWeekdayById(ctx context.Context, arg UpdateWeekdayByIdParams) (Weekday, error) {
+	row := q.db.QueryRowContext(ctx, updateWeekdayById, arg.Name, arg.DayOrder, arg.ID)
+	var i Weekday
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.DayOrder,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.CalendarID,
+		&i.UserID,
+	)
+	return i, err
+}

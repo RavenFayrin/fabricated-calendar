@@ -89,3 +89,30 @@ func (q *Queries) GetCalendarsByUserId(ctx context.Context, userID uuid.UUID) ([
 	}
 	return items, nil
 }
+
+const updateCalendarByID = `-- name: UpdateCalendarByID :one
+UPDATE calendar
+SET name = $1, description = $2, updated_at = NOW()
+WHERE id = $3
+RETURNING id, name, description, created_at, updated_at, user_id
+`
+
+type UpdateCalendarByIDParams struct {
+	Name        string
+	Description sql.NullString
+	ID          uuid.UUID
+}
+
+func (q *Queries) UpdateCalendarByID(ctx context.Context, arg UpdateCalendarByIDParams) (Calendar, error) {
+	row := q.db.QueryRowContext(ctx, updateCalendarByID, arg.Name, arg.Description, arg.ID)
+	var i Calendar
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Description,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.UserID,
+	)
+	return i, err
+}
