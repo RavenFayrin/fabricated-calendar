@@ -18,6 +18,22 @@ func (g *GUI) showCalendar() {
 }
 
 func (g *GUI) topSide() fyne.CanvasObject {
+	dbCalendars := g.getCalendars()
+
+	calendarNames := make([]string, 0, len(dbCalendars))
+	for _, cal := range dbCalendars {
+		calendarNames = append(calendarNames, cal.Name)
+	}
+
+	calendarSelect := widget.NewSelect(calendarNames, func(value string) {
+		for _, cal := range dbCalendars {
+			if cal.Name == value {
+				g.Calendar = &cal
+				break
+			}
+		}
+	})
+
 	createCalendarButton := widget.NewButton("Create New Calendar", func() {
 		g.showCalendarForm()
 	})
@@ -29,6 +45,7 @@ func (g *GUI) topSide() fyne.CanvasObject {
 	})
 
 	content := container.NewHBox(
+		calendarSelect,
 		createCalendarButton,
 		createLogoutButton,
 	)
@@ -38,6 +55,16 @@ func (g *GUI) topSide() fyne.CanvasObject {
 
 func (g *GUI) leftSide() {
 
+}
+
+func (g *GUI) getCalendars() []database.Calendar {
+	dbCalendars, err := calendar.GetCalendars(g.Config, g.User.ID)
+	if err != nil {
+		g.showError("Unable to get calendars.", err)
+		return []database.Calendar{}
+	}
+
+	return dbCalendars
 }
 
 func (g *GUI) showCalendarForm() {

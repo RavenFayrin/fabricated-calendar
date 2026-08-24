@@ -31,3 +31,11 @@ func CreateCalendar(cfg config.Config, name, desc string, userID uuid.UUID) erro
 
 	return nil
 }
+
+func GetCalendars(cfg config.Config, userID uuid.UUID) ([]database.Calendar, error) {
+	calendars, err := cfg.DB.GetCalendarsByUserId(context.Background(), userID)
+	if err != nil {
+		return nil, err
+	}
+	return calendars, nil
+}
