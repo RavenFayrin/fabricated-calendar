@@ -17,7 +17,8 @@ WHERE user_id = $1;
 -- name: UpdateCalendarByID :one
 UPDATE calendar
 SET name = $1, description = $2, updated_at = NOW()
-WHERE id = $3;
+WHERE id = $3
+RETURNING *;
 
 -- name: DeleteCalendar :exec
 DELETE FROM calendar
