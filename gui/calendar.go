@@ -3,19 +3,18 @@ package gui
 import (
 	"fabricated-calendar/internal/calendar"
 	"fabricated-calendar/internal/database"
-	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/google/uuid"
 )
 
 func (g *GUI) showCalendar() {
 	top_content := g.topSide()
 	left_content := g.leftSide()
+	middle_content := g.middleDisplay()
 
-	content := container.NewBorder(top_content, nil, left_content, nil, nil)
+	content := container.NewBorder(top_content, nil, left_content, nil, middle_content)
 
 	g.Window.SetContent(content)
 }
@@ -42,12 +41,13 @@ func (g *GUI) topSide() fyne.CanvasObject {
 	})
 
 	deleteCalendarButton := widget.NewButton("Delete Calendar", func() {
-		if g.Calendar == nil || g.Calendar.ID == uuid.Nil {
-			g.showError("Calendar not selected.", fmt.Errorf("no calendar selected"))
+		err := g.checkCalendarSelected()
+		if err != nil {
+			g.showError("Calendar not selected.", err)
 			return
 		}
 
-		err := calendar.DeleteCalendar(g.Config, g.Calendar.ID)
+		err = calendar.DeleteCalendar(g.Config, g.Calendar.ID)
 		if err != nil {
 			g.showError("Could not delete calendar.", err)
 		}
@@ -87,6 +87,28 @@ func (g *GUI) leftSide() fyne.CanvasObject {
 	content := container.NewVBox(
 		title,
 	)
+
+	return content
+}
+
+func (g *GUI) middleDisplay() fyne.CanvasObject {
+	err := g.checkCalendarSelected()
+	if err != nil {
+		content := container.NewVBox(
+			widget.NewLabelWithStyle(
+				"No Calendar Selected",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: true},
+			),
+			widget.NewLabelWithStyle(
+				"Select a calendar above to begin.",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: false},
+			),
+		)
+		return content
+	}
+	content := container.NewVBox()
 
 	return content
 }
