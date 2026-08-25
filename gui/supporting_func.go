@@ -2,6 +2,8 @@ package gui
 
 import (
 	"errors"
+	"fabricated-calendar/internal/calendar"
+	"fabricated-calendar/internal/database"
 	"fmt"
 
 	"fyne.io/fyne/v2"
@@ -19,4 +21,14 @@ func (g *GUI) checkCalendarSelected() error {
 		return fmt.Errorf("no calendar selected")
 	}
 	return nil
+}
+
+func (g *GUI) getCalendars() []database.Calendar {
+	dbCalendars, err := calendar.GetCalendars(g.Config, g.User.ID)
+	if err != nil {
+		g.showError("Unable to get calendars.", err)
+		return []database.Calendar{}
+	}
+
+	return dbCalendars
 }
