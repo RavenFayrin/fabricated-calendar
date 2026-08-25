@@ -33,11 +33,11 @@ func (g *GUI) calendarCreatationForm() *fyne.Container {
 			return
 		}
 
-		g.showCalendarWindow()
+		g.showCalendar()
 	})
 
 	closeButton := widget.NewButton("Close", func() {
-		g.showCalendarWindow()
+		g.showCalendar()
 	})
 
 	content := container.NewPadded(container.NewVBox(

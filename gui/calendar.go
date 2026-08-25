@@ -9,12 +9,12 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func (g *GUI) showCalendarWindow() {
+func (g *GUI) showCalendar() {
 	top_content := g.topSide()
 	left_content := g.leftSide()
-	middle_content := g.middleDisplay()
+	g.CalendarContainer = container.NewMax(g.middleDisplay())
 
-	content := container.NewBorder(top_content, nil, left_content, nil, middle_content)
+	content := container.NewBorder(top_content, nil, left_content, nil, g.CalendarContainer)
 
 	g.Window.SetContent(content)
 }
@@ -34,6 +34,8 @@ func (g *GUI) topSide() fyne.CanvasObject {
 				break
 			}
 		}
+
+		g.generateCalendar()
 	})
 
 	createCalendarButton := widget.NewButton("Create New Calendar", func() {
@@ -53,7 +55,7 @@ func (g *GUI) topSide() fyne.CanvasObject {
 		}
 
 		g.Calendar = &database.Calendar{}
-		g.showCalendarWindow()
+		g.showCalendar()
 	})
 
 	logoutButton := widget.NewButton("Log Out", func() {
@@ -132,4 +134,12 @@ func (g *GUI) getCalendars() []database.Calendar {
 	}
 
 	return dbCalendars
+}
+
+func (g *GUI) generateCalendar() {
+	g.CalendarContainer.Objects = []fyne.CanvasObject{
+		g.middleDisplay(),
+	}
+
+	g.CalendarContainer.Refresh()
 }
