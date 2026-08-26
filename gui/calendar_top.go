@@ -10,6 +10,7 @@ import (
 )
 
 func (g *GUI) topSide() fyne.CanvasObject {
+	// Get Calendars for Calendar Select
 	dbCalendars := g.getCalendars()
 
 	calendarNames := make([]string, 0, len(dbCalendars))
@@ -17,6 +18,7 @@ func (g *GUI) topSide() fyne.CanvasObject {
 		calendarNames = append(calendarNames, dbCalendars[i].Name)
 	}
 
+	// Calendar Select
 	calendarSelect := widget.NewSelect(calendarNames, func(value string) {
 		for i := range dbCalendars {
 			if dbCalendars[i].Name == value {
@@ -25,13 +27,15 @@ func (g *GUI) topSide() fyne.CanvasObject {
 			}
 		}
 
-		g.generateCalendar()
+		g.generateCalendar() // Regenerates Middle
 	})
 
+	// Create Calendar Button
 	createCalendarButton := widget.NewButton("Create New Calendar", func() {
 		g.showCalendarForm()
 	})
 
+	// Delete Calendar Button
 	deleteCalendarButton := widget.NewButton("Delete Calendar", func() {
 		err := g.checkCalendarSelected()
 		if err != nil {
@@ -48,11 +52,14 @@ func (g *GUI) topSide() fyne.CanvasObject {
 		g.showCalendar()
 	})
 
+	// Logout Button
 	logoutButton := widget.NewButton("Log Out", func() {
 		g.User = &database.User{}
 		g.Calendar = &database.Calendar{}
 		g.showLogin()
 	})
+
+	// Delete User Button
 
 	content := container.NewHBox(
 		widget.NewLabelWithStyle(
