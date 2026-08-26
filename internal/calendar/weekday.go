@@ -8,12 +8,12 @@ import (
 	"github.com/google/uuid"
 )
 
-func CreateWeekday(cfg config.Config, name string, order int32, calendardID, weekdayID uuid.UUID) error {
+func CreateWeekday(cfg config.Config, name string, order int32, calendardID, userId uuid.UUID) error {
 	_, err := cfg.DB.CreateWeekday(context.Background(), database.CreateWeekdayParams{
 		Name:       name,
 		DayOrder:   order,
 		CalendarID: calendardID,
-		UserID:     weekdayID,
+		UserID:     userId,
 	})
 	if err != nil {
 		return err
