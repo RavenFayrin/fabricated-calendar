@@ -35,4 +35,10 @@ func UpdateWeekday(cfg config.Config, name string, order int32, weekdayID uuid.U
 	return nil
 }
 
-// Delete
+func DeleteWeekday(cfg config.Config, weekdayID uuid.UUID) error {
+	err := cfg.DB.DeleteWeekday(context.Background(), weekdayID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
