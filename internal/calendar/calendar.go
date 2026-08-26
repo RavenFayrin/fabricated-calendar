@@ -40,6 +40,8 @@ func GetCalendars(cfg config.Config, userID uuid.UUID) ([]database.Calendar, err
 	return calendars, nil
 }
 
+// update
+
 func DeleteCalendar(cfg config.Config, id uuid.UUID) error {
 	err := cfg.DB.DeleteCalendar(context.Background(), id)
 	if err != nil {
