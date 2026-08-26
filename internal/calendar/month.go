@@ -37,4 +37,10 @@ func UpdateMonth(cfg config.Config, name string, order, numDays int32, monthID u
 	return nil
 }
 
-// delete
+func DeteleMonth(cfg config.Config, monthID uuid.UUID) error {
+	err := cfg.DB.DeleteMonth(context.Background(), monthID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
