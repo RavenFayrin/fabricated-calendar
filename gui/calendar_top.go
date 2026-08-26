@@ -1,11 +1,13 @@
 package gui
 
 import (
+	"fabricated-calendar/internal/auth"
 	"fabricated-calendar/internal/calendar"
 	"fabricated-calendar/internal/database"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -60,7 +62,17 @@ func (g *GUI) topSide() fyne.CanvasObject {
 	})
 
 	// Delete User Button
+	deleteUserButton := widget.NewButton("DELETE USER", func() {
+		err := auth.DeleteUser(g.Config, g.User.ID)
+		if err != nil {
+			g.showError("Could not delete user.", err)
+		}
+		g.User = &database.User{}
+		g.Calendar = &database.Calendar{}
+		g.showLogin()
+	})
 
+	// Content Creator
 	content := container.NewHBox(
 		widget.NewLabelWithStyle(
 			"Calendar: ",
@@ -70,6 +82,8 @@ func (g *GUI) topSide() fyne.CanvasObject {
 		calendarSelect,
 		createCalendarButton,
 		deleteCalendarButton,
+		layout.NewSpacer(),
+		deleteUserButton,
 		logoutButton,
 	)
 
