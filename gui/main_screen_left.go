@@ -8,8 +8,15 @@ import (
 
 const MainLeftDisplay = "main left"
 const CreateWeekdayForm = "weekday form"
+const CreateMonthForm = "month form"
 
 func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
+	err := g.checkCalendarSelected()
+	if err != nil {
+		content := container.NewVBox()
+		return content
+	}
+
 	// Text
 	titleText := widget.NewLabelWithStyle(
 		"Calendar Tools",
@@ -39,11 +46,32 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 		g.generateMainScreenLeftDisplay(CreateWeekdayForm)
 	})
 
+	createMonthButton := widget.NewButton("+ Add Month", func() {
+		err := g.checkCalendarSelected()
+		if err != nil {
+			g.showError("Calendar not selected.", err)
+			return
+		}
+		g.generateMainScreenLeftDisplay(CreateMonthForm)
+	})
+
+	// Retrive Calendar Parts
+	dbWeekdays := g.getWeekdays()
+
+	// Show Calendar Parts
+	weekdayLables := g.createWeekdayLables(dbWeekdays)
+
+	// Edit Calendar Parts
+
+	// Delete Calendar Parts
+
 	content := container.NewVBox(
 		titleText,
 		weekdaysText,
+		weekdayLables,
 		createWeekdayButton,
 		monthsText,
+		createMonthButton,
 	)
 
 	return content
@@ -60,6 +88,13 @@ func (g *GUI) generateMainScreenLeftDisplay(arg string) {
 	case CreateWeekdayForm:
 		g.LeftContainer.Objects = []fyne.CanvasObject{
 			g.showCreateWeekday(),
+		}
+
+		g.LeftContainer.Refresh()
+
+	case CreateMonthForm:
+		g.LeftContainer.Objects = []fyne.CanvasObject{
+			//g.showCreateMonth(),
 		}
 
 		g.LeftContainer.Refresh()
