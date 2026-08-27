@@ -5,9 +5,9 @@ import (
 )
 
 func (g *GUI) showMainScreen() {
-	topContent := g.topSide()
-	g.LeftContainer = container.NewMax(g.leftDisplay())
-	g.MiddleContainer = container.NewMax(g.middleDisplay())
+	topContent := g.mainScreenTopDisplay()
+	g.LeftContainer = container.NewMax(g.mainScreenLeftDisplay())
+	g.MiddleContainer = container.NewMax(g.mainScreenMiddleCalendarDisplay())
 
 	content := container.NewBorder(topContent, nil, g.LeftContainer, nil, g.MiddleContainer)
 

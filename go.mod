@@ -3,6 +3,7 @@ module fabricated-calendar
 go 1.26.3
 
 require (
+	fyne.io/x/fyne v0.0.0-20260712112324-6989f2f174fb
 	github.com/alexedwards/argon2id v1.0.0
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
@@ -10,7 +11,6 @@ require (
 )
 
 require (
-	fyne.io/x/fyne v0.0.0-20260712112324-6989f2f174fb // indirect
 	github.com/FyshOS/fancyfs v0.0.1 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
 )

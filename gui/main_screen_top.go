@@ -11,7 +11,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func (g *GUI) topSide() fyne.CanvasObject {
+func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 	// Get Calendars for Calendar Select
 	dbCalendars := g.getCalendars()
 
@@ -29,13 +29,13 @@ func (g *GUI) topSide() fyne.CanvasObject {
 			}
 		}
 
-		g.generateMiddle() // Regenerates Middle
-		g.generateLeft(MainLeftDisplay)
+		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 	})
 
 	// Create Calendar Button
 	createCalendarButton := widget.NewButton("Create New Calendar", func() {
-		g.showCalendarForm()
+		g.generateMainScreenMiddleDisplay(CreateCalendarForm)
 	})
 
 	// Delete Calendar Button

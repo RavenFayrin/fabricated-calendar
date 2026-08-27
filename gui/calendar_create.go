@@ -8,13 +8,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func (g *GUI) showCalendarForm() {
-	content := g.calendarCreatationForm()
-
-	g.Window.SetContent(content)
-}
-
-func (g *GUI) calendarCreatationForm() *fyne.Container {
+func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 	calName := widget.NewEntry()
 	calName.SetPlaceHolder("Calendar Name")
 

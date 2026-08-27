@@ -6,7 +6,10 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func (g *GUI) middleDisplay() fyne.CanvasObject {
+const MainMiddleDisplay = "main middle"
+const CreateCalendarForm = "calendar form"
+
+func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 	err := g.checkCalendarSelected()
 	if err != nil {
 		content := container.NewVBox(
@@ -39,10 +42,20 @@ func (g *GUI) middleDisplay() fyne.CanvasObject {
 	return content
 }
 
-func (g *GUI) generateMiddle() {
-	g.MiddleContainer.Objects = []fyne.CanvasObject{
-		g.middleDisplay(),
+func (g *GUI) generateMainScreenMiddleDisplay(arg string) {
+	switch arg {
+	case MainMiddleDisplay:
+		g.MiddleContainer.Objects = []fyne.CanvasObject{
+			g.mainScreenMiddleCalendarDisplay(),
+		}
+
+		g.MiddleContainer.Refresh()
+	case CreateCalendarForm:
+		g.MiddleContainer.Objects = []fyne.CanvasObject{
+			g.showCreateCalendar(),
+		}
+
+		g.MiddleContainer.Refresh()
 	}
 
-	g.MiddleContainer.Refresh()
 }
