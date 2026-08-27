@@ -54,16 +54,6 @@ func (g *GUI) showCreateWeekday() fyne.CanvasObject {
 	return content
 }
 
-func (g *GUI) getWeekdays() []database.Weekday {
-	dbWeekdays, err := calendar.GetWeekdays(g.Config, g.Calendar.ID)
-	if err != nil {
-		g.showError("Unable to get weekdays.", err)
-		return []database.Weekday{}
-	}
-
-	return dbWeekdays
-}
-
 func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject {
 	vbox := container.NewVBox()
 
@@ -74,7 +64,7 @@ func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject
 			"",
 			theme.DocumentCreateIcon(),
 			func() {
-				// TODO: edit weekday using dbWeekday.ID
+				g.generateMainScreenLeftDisplay(EditWeekdayForm)
 			},
 		)
 
@@ -82,7 +72,11 @@ func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject
 			"",
 			theme.DeleteIcon(),
 			func() {
-				// TODO: delete weekday using dbWeekday.ID
+				err := calendar.DeleteWeekday(g.Config, dbWeekday.ID)
+				if err != nil {
+					g.showError("Could not delete weekday.", err)
+				}
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
 			},
 		)
 
@@ -97,4 +91,14 @@ func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject
 	}
 
 	return vbox
+}
+
+func (g *GUI) getWeekdays() []database.Weekday {
+	dbWeekdays, err := calendar.GetWeekdays(g.Config, g.Calendar.ID)
+	if err != nil {
+		g.showError("Unable to get weekdays.", err)
+		return []database.Weekday{}
+	}
+
+	return dbWeekdays
 }

@@ -7,8 +7,10 @@ import (
 )
 
 const MainLeftDisplay = "main left"
-const CreateWeekdayForm = "weekday form"
-const CreateMonthForm = "month form"
+const CreateWeekdayForm = "create weekday form"
+const EditWeekdayForm = "edit weekday form"
+const CreateMonthForm = "create month form"
+const EditMonthForm = "edit month form"
 
 func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	err := g.checkCalendarSelected()
@@ -85,6 +87,7 @@ func (g *GUI) generateMainScreenLeftDisplay(arg string) {
 		}
 
 		g.LeftContainer.Refresh()
+
 	case CreateWeekdayForm:
 		g.LeftContainer.Objects = []fyne.CanvasObject{
 			g.showCreateWeekday(),
@@ -92,9 +95,23 @@ func (g *GUI) generateMainScreenLeftDisplay(arg string) {
 
 		g.LeftContainer.Refresh()
 
+	case EditWeekdayForm:
+		g.LeftContainer.Objects = []fyne.CanvasObject{
+			//g.showEditWeekday(),
+		}
+
+		g.LeftContainer.Refresh()
+
 	case CreateMonthForm:
 		g.LeftContainer.Objects = []fyne.CanvasObject{
 			//g.showCreateMonth(),
+		}
+
+		g.LeftContainer.Refresh()
+
+	case EditMonthForm:
+		g.LeftContainer.Objects = []fyne.CanvasObject{
+			//g.showEditMonth(),
 		}
 
 		g.LeftContainer.Refresh()
