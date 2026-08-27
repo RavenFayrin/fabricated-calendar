@@ -29,7 +29,13 @@ func CreateWeekday(cfg config.Config, name, order string, calendardID, userId uu
 	return nil
 }
 
-// Retrive
+func GetWeekdays(cfg config.Config, calID uuid.UUID) ([]database.Weekday, error) {
+	weekdays, err := cfg.DB.GetWeekdaysByCalendarId(context.Background(), calID)
+	if err != nil {
+		return nil, err
+	}
+	return weekdays, nil
+}
 
 func UpdateWeekday(cfg config.Config, name string, order int32, weekdayID uuid.UUID) error {
 	_, err := cfg.DB.UpdateWeekdayById(context.Background(), database.UpdateWeekdayByIdParams{
