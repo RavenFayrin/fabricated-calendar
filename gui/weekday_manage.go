@@ -54,6 +54,8 @@ func (g *GUI) showCreateWeekday() fyne.CanvasObject {
 	return content
 }
 
+// func (g *GUI) showEditWeekday() fyne.CanvasObject {}
+
 func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject {
 	vbox := container.NewVBox()
 
