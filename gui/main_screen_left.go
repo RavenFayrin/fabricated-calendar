@@ -1,9 +1,12 @@
 package gui
 
 import (
+	"fmt"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"github.com/google/uuid"
 )
 
 const MainLeftDisplay = "main left"
@@ -79,8 +82,8 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	return content
 }
 
-func (g *GUI) generateMainScreenLeftDisplay(arg string) {
-	switch arg {
+func (g *GUI) generateMainScreenLeftDisplay(display string, args ...uuid.UUID) {
+	switch display {
 	case MainLeftDisplay:
 		g.LeftContainer.Objects = []fyne.CanvasObject{
 			g.mainScreenLeftDisplay(),
@@ -96,8 +99,12 @@ func (g *GUI) generateMainScreenLeftDisplay(arg string) {
 		g.LeftContainer.Refresh()
 
 	case EditWeekdayForm:
+		if len(args) == 0 {
+			g.showError("Unable to edit weekday.", fmt.Errorf("weekday ID was not provided"))
+			return
+		}
 		g.LeftContainer.Objects = []fyne.CanvasObject{
-			//g.showEditWeekday(),
+			g.showEditWeekday(args[0]),
 		}
 
 		g.LeftContainer.Refresh()
@@ -110,6 +117,10 @@ func (g *GUI) generateMainScreenLeftDisplay(arg string) {
 		g.LeftContainer.Refresh()
 
 	case EditMonthForm:
+		if len(args) == 0 {
+			g.showError("Unable to edit month.", fmt.Errorf("month ID was not provided"))
+			return
+		}
 		g.LeftContainer.Objects = []fyne.CanvasObject{
 			//g.showEditMonth(),
 		}

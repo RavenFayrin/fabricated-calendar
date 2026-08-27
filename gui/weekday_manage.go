@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"github.com/google/uuid"
 
 	xwidget "fyne.io/x/fyne/widget"
 )
@@ -54,7 +55,45 @@ func (g *GUI) showCreateWeekday() fyne.CanvasObject {
 	return content
 }
 
-// func (g *GUI) showEditWeekday() fyne.CanvasObject {}
+func (g *GUI) showEditWeekday(weekdayID uuid.UUID) fyne.CanvasObject {
+	weekdayName := widget.NewEntry()
+	weekdayName.SetPlaceHolder("Weekday Name")
+
+	weekdayOrder := xwidget.NewNumericalEntry()
+	weekdayOrder.SetPlaceHolder("Weekday Order")
+
+	submitButton := widget.NewButton("Update Weekday", func() {
+		err := calendar.UpdateWeekday(
+			g.Config,
+			weekdayName.Text,
+			weekdayOrder.Text,
+			weekdayID,
+		)
+		if err != nil {
+			g.showError("Unable to update weekday.", err)
+			return
+		}
+		g.generateMainScreenLeftDisplay(MainLeftDisplay)
+	})
+
+	closeButton := widget.NewButton("Close", func() {
+		g.generateMainScreenLeftDisplay(MainLeftDisplay)
+	})
+
+	content := container.NewVBox(
+		widget.NewLabelWithStyle(
+			"Update Weekday",
+			fyne.TextAlignCenter,
+			fyne.TextStyle{Bold: true},
+		),
+		weekdayName,
+		weekdayOrder,
+		submitButton,
+		closeButton,
+	)
+
+	return content
+}
 
 func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject {
 	vbox := container.NewVBox()
@@ -66,7 +105,7 @@ func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject
 			"",
 			theme.DocumentCreateIcon(),
 			func() {
-				g.generateMainScreenLeftDisplay(EditWeekdayForm)
+				g.generateMainScreenLeftDisplay(EditWeekdayForm, dbWeekday.ID)
 			},
 		)
 

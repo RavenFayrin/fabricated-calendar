@@ -4,22 +4,19 @@ import (
 	"context"
 	"fabricated-calendar/config"
 	"fabricated-calendar/internal/database"
-	"strconv"
 
 	"github.com/google/uuid"
 )
 
 func CreateWeekday(cfg config.Config, name, order string, calendardID, userId uuid.UUID) error {
-	val64, err := strconv.ParseInt(order, 10, 32)
+	val, err := stringToInt32(order)
 	if err != nil {
 		return err
 	}
 
-	val32 := int32(val64)
-
 	_, err = cfg.DB.CreateWeekday(context.Background(), database.CreateWeekdayParams{
 		Name:       name,
-		DayOrder:   val32,
+		DayOrder:   val,
 		CalendarID: calendardID,
 		UserID:     userId,
 	})
@@ -37,10 +34,15 @@ func GetWeekdays(cfg config.Config, calID uuid.UUID) ([]database.Weekday, error)
 	return weekdays, nil
 }
 
-func UpdateWeekday(cfg config.Config, name string, order int32, weekdayID uuid.UUID) error {
-	_, err := cfg.DB.UpdateWeekdayById(context.Background(), database.UpdateWeekdayByIdParams{
+func UpdateWeekday(cfg config.Config, name, order string, weekdayID uuid.UUID) error {
+	val, err := stringToInt32(order)
+	if err != nil {
+		return err
+	}
+
+	_, err = cfg.DB.UpdateWeekdayById(context.Background(), database.UpdateWeekdayByIdParams{
 		Name:     name,
-		DayOrder: order,
+		DayOrder: val,
 		ID:       weekdayID,
 	})
 	if err != nil {
