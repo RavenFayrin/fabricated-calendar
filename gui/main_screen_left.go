@@ -62,13 +62,11 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 
 	// Retrive Calendar Parts
 	dbWeekdays := g.getWeekdays()
+	dbMonths := g.getMonths()
 
 	// Show Calendar Parts
 	weekdayLables := g.createWeekdayLables(dbWeekdays)
-
-	// Edit Calendar Parts
-
-	// Delete Calendar Parts
+	monthLables := g.createMonthLables(dbMonths)
 
 	content := container.NewVBox(
 		titleText,
@@ -76,6 +74,7 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 		weekdayLables,
 		createWeekdayButton,
 		monthsText,
+		monthLables,
 		createMonthButton,
 	)
 
@@ -111,7 +110,7 @@ func (g *GUI) generateMainScreenLeftDisplay(display string, args ...uuid.UUID) {
 
 	case CreateMonthForm:
 		g.LeftContainer.Objects = []fyne.CanvasObject{
-			//g.showCreateMonth(),
+			g.showCreateMonth(),
 		}
 
 		g.LeftContainer.Refresh()
@@ -122,7 +121,7 @@ func (g *GUI) generateMainScreenLeftDisplay(display string, args ...uuid.UUID) {
 			return
 		}
 		g.LeftContainer.Objects = []fyne.CanvasObject{
-			//g.showEditMonth(),
+			g.showEditMonth(args[0]),
 		}
 
 		g.LeftContainer.Refresh()
