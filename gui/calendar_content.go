@@ -4,7 +4,7 @@ import (
 	"fyne.io/fyne/v2/container"
 )
 
-func (g *GUI) showCalendar() {
+func (g *GUI) showMainScreen() {
 	topContent := g.topSide()
 	g.LeftContainer = container.NewMax(g.leftDisplay())
 	g.MiddleContainer = container.NewMax(g.middleDisplay())

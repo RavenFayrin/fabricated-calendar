@@ -52,7 +52,7 @@ func (g *GUI) topSide() fyne.CanvasObject {
 		}
 
 		g.Calendar = &database.Calendar{}
-		g.showCalendar()
+		g.showMainScreen()
 	})
 
 	// Logout Button
