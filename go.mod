@@ -10,6 +10,7 @@ require (
 )
 
 require (
+	fyne.io/x/fyne v0.0.0-20260712112324-6989f2f174fb // indirect
 	github.com/FyshOS/fancyfs v0.0.1 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
 )

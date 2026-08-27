@@ -29,7 +29,8 @@ func (g *GUI) topSide() fyne.CanvasObject {
 			}
 		}
 
-		g.generateCalendar() // Regenerates Middle
+		g.generateMiddle() // Regenerates Middle
+		g.generateLeft(MainLeftDisplay)
 	})
 
 	// Create Calendar Button
@@ -88,4 +89,14 @@ func (g *GUI) topSide() fyne.CanvasObject {
 	)
 
 	return content
+}
+
+func (g *GUI) getCalendars() []database.Calendar {
+	dbCalendars, err := calendar.GetCalendars(g.Config, g.User.ID)
+	if err != nil {
+		g.showError("Unable to get calendars.", err)
+		return []database.Calendar{}
+	}
+
+	return dbCalendars
 }

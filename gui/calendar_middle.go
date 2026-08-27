@@ -39,10 +39,10 @@ func (g *GUI) middleDisplay() fyne.CanvasObject {
 	return content
 }
 
-func (g *GUI) generateCalendar() {
-	g.CalendarContainer.Objects = []fyne.CanvasObject{
+func (g *GUI) generateMiddle() {
+	g.MiddleContainer.Objects = []fyne.CanvasObject{
 		g.middleDisplay(),
 	}
 
-	g.CalendarContainer.Refresh()
+	g.MiddleContainer.Refresh()
 }

@@ -5,11 +5,11 @@ import (
 )
 
 func (g *GUI) showCalendar() {
-	top_content := g.topSide()
-	left_content := g.leftSide()
-	g.CalendarContainer = container.NewMax(g.middleDisplay())
+	topContent := g.topSide()
+	g.LeftContainer = container.NewMax(g.leftDisplay())
+	g.MiddleContainer = container.NewMax(g.middleDisplay())
 
-	content := container.NewBorder(top_content, nil, left_content, nil, g.CalendarContainer)
+	content := container.NewBorder(topContent, nil, g.LeftContainer, nil, g.MiddleContainer)
 
 	g.Window.SetContent(content)
 }
