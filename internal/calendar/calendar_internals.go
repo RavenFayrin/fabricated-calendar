@@ -1,26 +1,25 @@
 package calendar
 
-// import (
-// 	"fmt"
-// 	"sort"
-// )
+import (
+	"context"
+	"fabricated-calendar/config"
 
-// type CalendarSystem struct {
-// 	Name     string
-// 	Weekdays []*WeekDay
-// 	Months   []*Month
-// }
+	"github.com/google/uuid"
+)
 
-// func (cs *CalendarSystem) DaysInYear() int {
+func DaysInYear(cfg config.Config, calID uuid.UUID) (int, error) {
+	months, err := cfg.DB.GetMonthsByCalendarId(context.Background(), calID)
+	if err != nil {
+		return 0, err
+	}
 
-// 	total := 0
+	total := 0
 
-// 	for _, m := range cs.Months {
-// 		total += m.NumDays
-// 	}
-
-// 	return total
-// }
+	for _, month := range months {
+		total += int(month.DaysInMonth)
+	}
+	return total, nil
+}
 
 // func (cs *CalendarSystem) WeeksInYear() int {
 // 	return cs.DaysInYear() / len(cs.Weekdays)
