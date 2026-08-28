@@ -58,7 +58,7 @@ func (q *Queries) DeleteCalendar(ctx context.Context, id uuid.UUID) error {
 const getCalendarsByUserId = `-- name: GetCalendarsByUserId :many
 SELECT id, name, description, created_at, updated_at, user_id FROM calendar
 WHERE user_id = $1
-ORDER BY updated_at ASC
+ORDER BY updated_at DESC
 `
 
 func (q *Queries) GetCalendarsByUserId(ctx context.Context, userID uuid.UUID) ([]Calendar, error) {

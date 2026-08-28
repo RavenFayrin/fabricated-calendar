@@ -52,16 +52,6 @@ func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 	return content
 }
 
-func (g *GUI) getCalendars() []database.Calendar {
-	dbCalendars, err := calendar.GetCalendars(g.Config, g.User.ID)
-	if err != nil {
-		g.showError("Unable to get calendars.", err)
-		return []database.Calendar{}
-	}
-
-	return dbCalendars
-}
-
 func (g *GUI) showEditCalendar(calID uuid.UUID) fyne.CanvasObject {
 	calName := widget.NewEntry()
 	calName.SetPlaceHolder("Calendar Name")
@@ -104,4 +94,14 @@ func (g *GUI) showEditCalendar(calID uuid.UUID) fyne.CanvasObject {
 	))
 
 	return content
+}
+
+func (g *GUI) getCalendars() []database.Calendar {
+	dbCalendars, err := calendar.GetCalendars(g.Config, g.User.ID)
+	if err != nil {
+		g.showError("Unable to get calendars.", err)
+		return []database.Calendar{}
+	}
+
+	return dbCalendars
 }

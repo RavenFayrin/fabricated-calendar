@@ -13,7 +13,7 @@ RETURNING *;
 -- name: GetCalendarsByUserId :many
 SELECT * FROM calendar
 WHERE user_id = $1
-ORDER BY updated_at ASC;
+ORDER BY updated_at DESC;
 
 -- name: UpdateCalendarByID :one
 UPDATE calendar
