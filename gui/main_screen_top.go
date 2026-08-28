@@ -11,6 +11,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+const MainTopDisplay = "main top"
+
 func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 	// Get Calendars for Calendar Select
 	dbCalendars := g.getCalendars()
@@ -36,6 +38,11 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 	// Create Calendar Button
 	createCalendarButton := widget.NewButton("Create New Calendar", func() {
 		g.generateMainScreenMiddleDisplay(CreateCalendarForm)
+	})
+
+	// Edit Calendar Button
+	editCalendarButton := widget.NewButton("Edit Calendar", func() {
+		g.generateMainScreenMiddleDisplay(EditCalendarForm)
 	})
 
 	// Delete Calendar Button
@@ -82,6 +89,7 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 		),
 		calendarSelect,
 		createCalendarButton,
+		editCalendarButton,
 		deleteCalendarButton,
 		layout.NewSpacer(),
 		deleteUserButton,
@@ -91,12 +99,13 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 	return content
 }
 
-func (g *GUI) getCalendars() []database.Calendar {
-	dbCalendars, err := calendar.GetCalendars(g.Config, g.User.ID)
-	if err != nil {
-		g.showError("Unable to get calendars.", err)
-		return []database.Calendar{}
-	}
+func (g *GUI) generateMainScreenTopDisplay(display string) {
+	switch display {
+	case MainTopDisplay:
+		g.TopContainer.Objects = []fyne.CanvasObject{
+			g.mainScreenTopDisplay(),
+		}
 
-	return dbCalendars
+		g.TopContainer.Refresh()
+	}
 }

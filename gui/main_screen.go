@@ -5,11 +5,11 @@ import (
 )
 
 func (g *GUI) showMainScreen() {
-	topContent := g.mainScreenTopDisplay()
+	g.TopContainer = container.NewMax(g.mainScreenTopDisplay())
 	g.LeftContainer = container.NewMax(g.mainScreenLeftDisplay())
 	g.MiddleContainer = container.NewMax(g.mainScreenMiddleCalendarDisplay())
 
-	content := container.NewBorder(topContent, nil, g.LeftContainer, nil, g.MiddleContainer)
+	content := container.NewBorder(g.TopContainer, nil, g.LeftContainer, nil, g.MiddleContainer)
 
 	g.Window.SetContent(content)
 }

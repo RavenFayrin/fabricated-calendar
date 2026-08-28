@@ -7,7 +7,8 @@ import (
 )
 
 const MainMiddleDisplay = "main middle"
-const CreateCalendarForm = "calendar form"
+const CreateCalendarForm = "create calendar form"
+const EditCalendarForm = "edit calendar form"
 
 func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 	err := g.checkCalendarSelected()
@@ -42,8 +43,8 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 	return content
 }
 
-func (g *GUI) generateMainScreenMiddleDisplay(arg string) {
-	switch arg {
+func (g *GUI) generateMainScreenMiddleDisplay(display string) {
+	switch display {
 	case MainMiddleDisplay:
 		g.MiddleContainer.Objects = []fyne.CanvasObject{
 			g.mainScreenMiddleCalendarDisplay(),
@@ -53,6 +54,17 @@ func (g *GUI) generateMainScreenMiddleDisplay(arg string) {
 	case CreateCalendarForm:
 		g.MiddleContainer.Objects = []fyne.CanvasObject{
 			g.showCreateCalendar(),
+		}
+
+		g.MiddleContainer.Refresh()
+	case EditCalendarForm:
+		err := g.checkCalendarSelected()
+		if err != nil {
+			g.showError("No calendar selected.", err)
+			return
+		}
+		g.MiddleContainer.Objects = []fyne.CanvasObject{
+			g.showEditCalendar(g.Calendar.ID),
 		}
 
 		g.MiddleContainer.Refresh()

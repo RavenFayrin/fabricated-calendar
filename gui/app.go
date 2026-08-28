@@ -14,8 +14,9 @@ type GUI struct {
 	Config          config.Config
 	User            *database.User
 	Calendar        *database.Calendar
-	MiddleContainer *fyne.Container
+	TopContainer    *fyne.Container
 	LeftContainer   *fyne.Container
+	MiddleContainer *fyne.Container
 }
 
 func Start(app fyne.App, cfg config.Config) {
