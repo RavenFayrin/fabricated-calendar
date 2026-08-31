@@ -10,6 +10,10 @@ VALUES (
 )
 RETURNING *;
 
+-- name: GetCalendarById :one
+SELECT * FROM calendar
+WHERE id = $1;
+
 -- name: GetCalendarsByUserId :many
 SELECT * FROM calendar
 WHERE user_id = $1

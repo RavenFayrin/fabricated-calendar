@@ -55,6 +55,25 @@ func (q *Queries) DeleteCalendar(ctx context.Context, id uuid.UUID) error {
 	return err
 }
 
+const getCalendarById = `-- name: GetCalendarById :one
+SELECT id, name, description, created_at, updated_at, user_id FROM calendar
+WHERE id = $1
+`
+
+func (q *Queries) GetCalendarById(ctx context.Context, id uuid.UUID) (Calendar, error) {
+	row := q.db.QueryRowContext(ctx, getCalendarById, id)
+	var i Calendar
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Description,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.UserID,
+	)
+	return i, err
+}
+
 const getCalendarsByUserId = `-- name: GetCalendarsByUserId :many
 SELECT id, name, description, created_at, updated_at, user_id FROM calendar
 WHERE user_id = $1
