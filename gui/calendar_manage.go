@@ -29,6 +29,7 @@ func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 			return
 		}
 
+		g.generateMainScreenTopDisplay(MainTopDisplay)
 		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 	})
