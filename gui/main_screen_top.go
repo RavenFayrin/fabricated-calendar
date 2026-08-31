@@ -27,6 +27,16 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 		for i := range dbCalendars {
 			if dbCalendars[i].Name == value {
 				g.Calendar = &dbCalendars[i]
+				calendarData, err := calendar.GetCalendarData(
+					g.Config,
+					g.Calendar.ID,
+				)
+				if err != nil {
+					g.showError("Unable to select calendar.", err)
+				}
+				g.CalendarData = &calendarData
+				g.DisplayMonthIndex = 0
+				g.DisplayYear = 0
 				break
 			}
 		}

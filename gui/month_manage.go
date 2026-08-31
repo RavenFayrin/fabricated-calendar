@@ -38,6 +38,7 @@ func (g *GUI) showCreateMonth() fyne.CanvasObject {
 			return
 		}
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
+		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 	})
 
 	closeButton := widget.NewButton("Close", func() {
@@ -83,6 +84,7 @@ func (g *GUI) showEditMonth(monthID uuid.UUID) fyne.CanvasObject {
 			return
 		}
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
+		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 	})
 
 	closeButton := widget.NewButton("Close", func() {

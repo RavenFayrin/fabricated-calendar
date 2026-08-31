@@ -3,17 +3,25 @@ package gui
 import (
 	"fabricated-calendar/config"
 	"fabricated-calendar/gui/theme"
+	"fabricated-calendar/internal/calendar"
 	"fabricated-calendar/internal/database"
 
 	"fyne.io/fyne/v2"
 )
 
 type GUI struct {
-	App             fyne.App
-	Window          fyne.Window
-	Config          config.Config
-	User            *database.User
-	Calendar        *database.Calendar
+	App    fyne.App
+	Window fyne.Window
+
+	Config   config.Config
+	User     *database.User
+	Calendar *database.Calendar
+
+	CalendarData *calendar.CalendarData
+
+	DisplayYear       int32
+	DisplayMonthIndex int32
+
 	TopContainer    *fyne.Container
 	LeftContainer   *fyne.Container
 	MiddleContainer *fyne.Container

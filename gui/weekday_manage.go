@@ -34,6 +34,7 @@ func (g *GUI) showCreateWeekday() fyne.CanvasObject {
 			return
 		}
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
+		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 	})
 
 	closeButton := widget.NewButton("Close", func() {
@@ -74,6 +75,7 @@ func (g *GUI) showEditWeekday(weekdayID uuid.UUID) fyne.CanvasObject {
 			return
 		}
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
+		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 	})
 
 	closeButton := widget.NewButton("Close", func() {

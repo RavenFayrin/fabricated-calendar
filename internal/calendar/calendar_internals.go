@@ -3,9 +3,50 @@ package calendar
 import (
 	"context"
 	"fabricated-calendar/config"
+	"fabricated-calendar/internal/database"
 
 	"github.com/google/uuid"
 )
+
+type CalendarData struct {
+	Calendar database.Calendar
+	Weekdays []database.Weekday
+	Months   []database.Month
+}
+
+func GetCalendarData(
+	cfg config.Config,
+	calendarID uuid.UUID,
+) (CalendarData, error) {
+	var data CalendarData
+
+	cal, err := cfg.DB.GetCalendarById(context.Background(), calendarID)
+	if err != nil {
+		return data, err
+	}
+
+	weekdays, err := cfg.DB.GetWeekdaysByCalendarId(
+		context.Background(),
+		calendarID,
+	)
+	if err != nil {
+		return data, err
+	}
+
+	months, err := cfg.DB.GetMonthsByCalendarId(
+		context.Background(),
+		calendarID,
+	)
+	if err != nil {
+		return data, err
+	}
+
+	data.Calendar = cal
+	data.Weekdays = weekdays
+	data.Months = months
+
+	return data, nil
+}
 
 func DaysInYear(cfg config.Config, calID uuid.UUID) (int, error) {
 	months, err := cfg.DB.GetMonthsByCalendarId(context.Background(), calID)
