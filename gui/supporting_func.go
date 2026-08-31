@@ -2,6 +2,7 @@ package gui
 
 import (
 	"errors"
+	"fabricated-calendar/internal/calendar"
 	"fmt"
 
 	"fyne.io/fyne/v2"
@@ -18,5 +19,17 @@ func (g *GUI) checkCalendarSelected() error {
 	if g.Calendar == nil || g.Calendar.ID == uuid.Nil {
 		return fmt.Errorf("no calendar selected")
 	}
+	return nil
+}
+
+func (g *GUI) fetchCalendarData() error {
+	calendarData, err := calendar.GetCalendarData(
+		g.Config,
+		g.Calendar.ID,
+	)
+	if err != nil {
+		return err
+	}
+	g.CalendarData = &calendarData
 	return nil
 }

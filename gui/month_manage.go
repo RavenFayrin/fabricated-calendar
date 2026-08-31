@@ -37,6 +37,13 @@ func (g *GUI) showCreateMonth() fyne.CanvasObject {
 			g.showError("Unable to create month.", err)
 			return
 		}
+
+		err = g.fetchCalendarData()
+		if err != nil {
+			g.showError("Unable to update calendar.", err)
+			return
+		}
+
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 	})

@@ -33,6 +33,13 @@ func (g *GUI) showCreateWeekday() fyne.CanvasObject {
 			g.showError("Unable to create weekday.", err)
 			return
 		}
+
+		err = g.fetchCalendarData()
+		if err != nil {
+			g.showError("Unable to update calendar.", err)
+			return
+		}
+
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 	})
