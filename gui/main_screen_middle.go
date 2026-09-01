@@ -31,6 +31,22 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 		)
 		return content
 	}
+	err = g.checkCalendarData()
+	if err != nil {
+		content := container.NewVBox(
+			widget.NewLabelWithStyle(
+				"No Months or Weekdays Created",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: true},
+			),
+			widget.NewLabelWithStyle(
+				"Create months and/or weekdays to begin.",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: false},
+			),
+		)
+		return content
+	}
 
 	backMonthButton := widget.NewButtonWithIcon(
 		"",
@@ -52,6 +68,8 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 			}
 		})
 
+	weekdayGrid := g.createWeekdayGrid()
+
 	content := container.NewVBox(
 		widget.NewLabelWithStyle(
 			g.Calendar.Name,
@@ -69,6 +87,7 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 			nextMonthButton,
 			layout.NewSpacer(),
 		),
+		weekdayGrid,
 	)
 
 	return content
@@ -112,6 +131,22 @@ func (g *GUI) previousMonth() error {
 	g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 
 	return nil
+}
+
+func (g *GUI) createWeekdayGrid() fyne.CanvasObject {
+	weekdayGrid := container.New(
+		layout.NewGridLayout(len(g.CalendarData.Weekdays)))
+
+	for _, weekday := range g.CalendarData.Weekdays {
+		weekdayLable := widget.NewLabelWithStyle(
+			weekday.Name,
+			fyne.TextAlignCenter,
+			fyne.TextStyle{Bold: true},
+		)
+
+		weekdayGrid.Add(weekdayLable)
+	}
+	return weekdayGrid
 }
 
 func (g *GUI) generateMainScreenMiddleDisplay(display string) {

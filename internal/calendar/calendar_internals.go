@@ -48,7 +48,7 @@ func GetCalendarData(
 	return data, nil
 }
 
-func DaysInYear(cfg config.Config, calID uuid.UUID) (int, error) {
+func DaysPerYear(cfg config.Config, calID uuid.UUID) (int, error) {
 	months, err := cfg.DB.GetMonthsByCalendarId(context.Background(), calID)
 	if err != nil {
 		return 0, err

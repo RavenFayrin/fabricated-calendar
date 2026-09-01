@@ -33,3 +33,10 @@ func (g *GUI) fetchCalendarData() error {
 	g.CalendarData = &calendarData
 	return nil
 }
+
+func (g *GUI) checkCalendarData() error {
+	if len(g.CalendarData.Months) == 0 || len(g.CalendarData.Weekdays) == 0 {
+		return fmt.Errorf("no months or weekday created")
+	}
+	return nil
+}
