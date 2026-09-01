@@ -2,6 +2,7 @@ package gui
 
 import (
 	"fmt"
+	"strconv"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -69,26 +70,29 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 		})
 
 	weekdayGrid := g.createWeekdayGrid()
+	monthGrid := g.createMonthGrid()
 
-	content := container.NewVBox(
-		widget.NewLabelWithStyle(
-			g.Calendar.Name,
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
-		),
-		container.NewHBox(
-			layout.NewSpacer(),
-			backMonthButton,
+	content := container.NewPadded(
+		container.NewVBox(
 			widget.NewLabelWithStyle(
-				fmt.Sprintf("%s - Year %v", g.CalendarData.Months[g.DisplayMonthIndex].Name, g.DisplayYear),
+				g.Calendar.Name,
 				fyne.TextAlignCenter,
 				fyne.TextStyle{Bold: true},
 			),
-			nextMonthButton,
-			layout.NewSpacer(),
-		),
-		weekdayGrid,
-	)
+			container.NewHBox(
+				layout.NewSpacer(),
+				backMonthButton,
+				widget.NewLabelWithStyle(
+					fmt.Sprintf("%s - Year %v", g.CalendarData.Months[g.DisplayMonthIndex].Name, g.DisplayYear),
+					fyne.TextAlignCenter,
+					fyne.TextStyle{Bold: true},
+				),
+				nextMonthButton,
+				layout.NewSpacer(),
+			),
+			weekdayGrid,
+			monthGrid,
+		))
 
 	return content
 }
@@ -147,6 +151,49 @@ func (g *GUI) createWeekdayGrid() fyne.CanvasObject {
 		weekdayGrid.Add(weekdayLable)
 	}
 	return weekdayGrid
+}
+
+func (g *GUI) createMonthGrid() fyne.CanvasObject {
+	columns := len(g.CalendarData.Weekdays)
+
+	monthGrid := container.New(
+		layout.NewGridLayout(columns),
+	)
+
+	startWeekdayIndex := g.CalendarData.GetMonthStartWeekday(
+		int(g.DisplayMonthIndex),
+		int(g.DisplayYear),
+	)
+
+	// Blank cells before the first day.
+	for range startWeekdayIndex {
+		monthGrid.Add(NewCalendarCell(""))
+	}
+
+	// Days in the month.
+	for i := range g.CalendarData.Months[g.DisplayMonthIndex].DaysInMonth {
+		day := strconv.Itoa(int(i) + 1)
+
+		monthGrid.Add(
+			NewCalendarCell(day),
+		)
+	}
+
+	// Blank cells after the last day so the final row is complete.
+	totalCells := startWeekdayIndex +
+		int(g.CalendarData.Months[g.DisplayMonthIndex].DaysInMonth)
+
+	remainder := totalCells % columns
+
+	if remainder != 0 {
+		blanksNeeded := columns - remainder
+
+		for range blanksNeeded {
+			monthGrid.Add(NewCalendarCell(""))
+		}
+	}
+
+	return monthGrid
 }
 
 func (g *GUI) generateMainScreenMiddleDisplay(display string) {
