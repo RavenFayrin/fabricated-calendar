@@ -18,8 +18,7 @@ const EditMonthForm = "edit month form"
 func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	err := g.checkCalendarSelected()
 	if err != nil {
-		content := container.NewVBox()
-		return content
+		return container.NewVBox()
 	}
 
 	// Text
@@ -48,6 +47,7 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 			g.showError("Calendar not selected.", err)
 			return
 		}
+
 		g.generateMainScreenLeftDisplay(CreateWeekdayForm)
 	})
 
@@ -57,29 +57,37 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 			g.showError("Calendar not selected.", err)
 			return
 		}
+
 		g.generateMainScreenLeftDisplay(CreateMonthForm)
 	})
 
-	// Retrive Calendar Parts
+	// Retrieve Calendar Parts
 	dbWeekdays := g.getWeekdays()
 	dbMonths := g.getMonths()
 
 	// Show Calendar Parts
-	weekdayLables := g.createWeekdayLables(dbWeekdays)
-	monthLables := g.createMonthLables(dbMonths)
+	weekdayLabels := g.createWeekdayLables(dbWeekdays)
+	monthLabels := g.createMonthLables(dbMonths)
 
-	content := container.NewPadded(
-		container.NewVBox(
-			titleText,
-			weekdaysText,
-			weekdayLables,
-			createWeekdayButton,
-			monthsText,
-			monthLables,
-			createMonthButton,
-		))
+	// Calendar tools content
+	tools := container.NewVBox(
+		titleText,
+		weekdaysText,
+		weekdayLabels,
+		createWeekdayButton,
+		monthsText,
+		monthLabels,
+		createMonthButton,
+	)
 
-	return content
+	// Add padding between the content and the left side
+	// of the window.
+	padded := container.NewPadded(tools)
+
+	// Make the tools scrollable.
+	scroll := container.NewVScroll(padded)
+
+	return scroll
 }
 
 func (g *GUI) generateMainScreenLeftDisplay(display string, args ...uuid.UUID) {
