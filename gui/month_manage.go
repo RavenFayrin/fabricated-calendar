@@ -90,6 +90,13 @@ func (g *GUI) showEditMonth(monthID uuid.UUID) fyne.CanvasObject {
 			g.showError("Unable to update month.", err)
 			return
 		}
+
+		err = g.fetchCalendarData()
+		if err != nil {
+			g.showError("Unable to update month.", err)
+			return
+		}
+
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 	})
@@ -136,7 +143,13 @@ func (g *GUI) createMonthLables(months []database.Month) fyne.CanvasObject {
 				if err != nil {
 					g.showError("Could not delete month.", err)
 				}
+				err = g.fetchCalendarData()
+				if err != nil {
+					g.showError("Unable to delete month.", err)
+					return
+				}
 				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 			},
 		)
 

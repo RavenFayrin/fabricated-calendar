@@ -81,6 +81,13 @@ func (g *GUI) showEditWeekday(weekdayID uuid.UUID) fyne.CanvasObject {
 			g.showError("Unable to update weekday.", err)
 			return
 		}
+
+		err = g.fetchCalendarData()
+		if err != nil {
+			g.showError("Unable to update weekday.", err)
+			return
+		}
+
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 	})
@@ -126,7 +133,15 @@ func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject
 				if err != nil {
 					g.showError("Could not delete weekday.", err)
 				}
+
+				err = g.fetchCalendarData()
+				if err != nil {
+					g.showError("Unable to delete weekday.", err)
+					return
+				}
+
 				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 			},
 		)
 
