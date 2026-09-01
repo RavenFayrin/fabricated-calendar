@@ -52,18 +52,19 @@ func (g *GUI) showCreateMonth() fyne.CanvasObject {
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 	})
 
-	content := container.NewVBox(
-		widget.NewLabelWithStyle(
-			"Create New Month",
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
-		),
-		monthName,
-		monthOrder,
-		monthLength,
-		submitButton,
-		closeButton,
-	)
+	content := container.NewPadded(
+		container.NewVBox(
+			widget.NewLabelWithStyle(
+				"Create New Month",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: true},
+			),
+			monthName,
+			monthOrder,
+			monthLength,
+			submitButton,
+			closeButton,
+		))
 
 	return content
 }
@@ -105,18 +106,19 @@ func (g *GUI) showEditMonth(monthID uuid.UUID) fyne.CanvasObject {
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 	})
 
-	content := container.NewVBox(
-		widget.NewLabelWithStyle(
-			"Update Month",
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
-		),
-		monthName,
-		monthOrder,
-		monthLength,
-		submitButton,
-		closeButton,
-	)
+	content := container.NewPadded(
+		container.NewVBox(
+			widget.NewLabelWithStyle(
+				"Update Month",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: true},
+			),
+			monthName,
+			monthOrder,
+			monthLength,
+			submitButton,
+			closeButton,
+		))
 
 	return content
 }

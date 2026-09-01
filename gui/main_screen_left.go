@@ -68,15 +68,16 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	weekdayLables := g.createWeekdayLables(dbWeekdays)
 	monthLables := g.createMonthLables(dbMonths)
 
-	content := container.NewVBox(
-		titleText,
-		weekdaysText,
-		weekdayLables,
-		createWeekdayButton,
-		monthsText,
-		monthLables,
-		createMonthButton,
-	)
+	content := container.NewPadded(
+		container.NewVBox(
+			titleText,
+			weekdaysText,
+			weekdayLables,
+			createWeekdayButton,
+			monthsText,
+			monthLables,
+			createMonthButton,
+		))
 
 	return content
 }

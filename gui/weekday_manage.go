@@ -48,17 +48,18 @@ func (g *GUI) showCreateWeekday() fyne.CanvasObject {
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 	})
 
-	content := container.NewVBox(
-		widget.NewLabelWithStyle(
-			"Create New Weekday",
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
-		),
-		weekdayName,
-		weekdayOrder,
-		submitButton,
-		closeButton,
-	)
+	content := container.NewPadded(
+		container.NewVBox(
+			widget.NewLabelWithStyle(
+				"Create New Weekday",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: true},
+			),
+			weekdayName,
+			weekdayOrder,
+			submitButton,
+			closeButton,
+		))
 
 	return content
 }
@@ -96,17 +97,18 @@ func (g *GUI) showEditWeekday(weekdayID uuid.UUID) fyne.CanvasObject {
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 	})
 
-	content := container.NewVBox(
-		widget.NewLabelWithStyle(
-			"Update Weekday",
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
-		),
-		weekdayName,
-		weekdayOrder,
-		submitButton,
-		closeButton,
-	)
+	content := container.NewPadded(
+		container.NewVBox(
+			widget.NewLabelWithStyle(
+				"Update Weekday",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: true},
+			),
+			weekdayName,
+			weekdayOrder,
+			submitButton,
+			closeButton,
+		))
 
 	return content
 }

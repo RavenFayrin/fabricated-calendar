@@ -38,17 +38,18 @@ func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 	})
 
-	content := container.NewPadded(container.NewVBox(
-		widget.NewLabelWithStyle(
-			"Create New Calendar",
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
-		),
-		calName,
-		calDesc,
-		submitButton,
-		closeButton,
-	))
+	content := container.NewPadded(
+		container.NewVBox(
+			widget.NewLabelWithStyle(
+				"Create New Calendar",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: true},
+			),
+			calName,
+			calDesc,
+			submitButton,
+			closeButton,
+		))
 
 	return content
 }
@@ -82,17 +83,18 @@ func (g *GUI) showEditCalendar(calID uuid.UUID) fyne.CanvasObject {
 		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 	})
 
-	content := container.NewPadded(container.NewVBox(
-		widget.NewLabelWithStyle(
-			"Edit Calendar",
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
-		),
-		calName,
-		calDesc,
-		submitButton,
-		closeButton,
-	))
+	content := container.NewPadded(
+		container.NewVBox(
+			widget.NewLabelWithStyle(
+				"Edit Calendar",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: true},
+			),
+			calName,
+			calDesc,
+			submitButton,
+			closeButton,
+		))
 
 	return content
 }

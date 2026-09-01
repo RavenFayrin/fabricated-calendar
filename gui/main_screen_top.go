@@ -87,20 +87,21 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 	})
 
 	// Content Creator
-	content := container.NewHBox(
-		widget.NewLabelWithStyle(
-			"Calendar: ",
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
-		),
-		calendarSelect,
-		createCalendarButton,
-		editCalendarButton,
-		deleteCalendarButton,
-		layout.NewSpacer(),
-		deleteUserButton,
-		logoutButton,
-	)
+	content := container.NewPadded(
+		container.NewHBox(
+			widget.NewLabelWithStyle(
+				"Calendar: ",
+				fyne.TextAlignCenter,
+				fyne.TextStyle{Bold: true},
+			),
+			calendarSelect,
+			createCalendarButton,
+			editCalendarButton,
+			deleteCalendarButton,
+			layout.NewSpacer(),
+			deleteUserButton,
+			logoutButton,
+		))
 
 	return content
 }
