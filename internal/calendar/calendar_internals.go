@@ -48,18 +48,25 @@ func GetCalendarData(
 	return data, nil
 }
 
-func DaysPerYear(cfg config.Config, calID uuid.UUID) (int, error) {
-	months, err := cfg.DB.GetMonthsByCalendarId(context.Background(), calID)
-	if err != nil {
-		return 0, err
-	}
-
+func (c CalendarData) daysPerYear() int {
 	total := 0
 
-	for _, month := range months {
+	for _, month := range c.Months {
 		total += int(month.DaysInMonth)
 	}
-	return total, nil
+	return total
+}
+
+func (c CalendarData) GetMonthStartWeekday(monthIndex int, year int) int {
+	totalDays := 0
+
+	totalDays += c.daysPerYear() * year
+
+	for i := range monthIndex {
+		totalDays += int(c.Months[i].DaysInMonth)
+	}
+
+	return totalDays % len(c.Weekdays)
 }
 
 // func (cs *CalendarSystem) WeeksInYear() int {
