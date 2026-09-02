@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	xwidget "fyne.io/x/fyne/widget"
 )
 
 const MainMiddleDisplay = "main middle"
@@ -16,6 +17,7 @@ const CreateCalendarForm = "create calendar form"
 const EditCalendarForm = "edit calendar form"
 
 func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
+	// Error checker
 	err := g.checkCalendarSelected()
 	if err != nil {
 		content := container.NewVBox(
@@ -49,6 +51,7 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 		return content
 	}
 
+	// Pagination
 	backMonthButton := widget.NewButtonWithIcon(
 		"",
 		theme.NavigateBackIcon(),
@@ -69,8 +72,24 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 			}
 		})
 
+	// Create Month/Year Selection
+	monthSelection := g.createMonthSelector()
+
+	yearEntry := xwidget.NewNumericalEntry()
+	yearEntry.SetPlaceHolder("Year Selector")
+
+	submitDateChangeButton := g.createMonthYearSelectorButton(monthSelection, yearEntry)
+
+	// Grids
 	weekdayGrid := g.createWeekdayGrid()
 	monthGrid := g.createMonthGrid()
+
+	// Labels
+	monthYearLabel := widget.NewLabelWithStyle(
+		fmt.Sprintf("%s - Year %v", g.CalendarData.Months[g.DisplayMonthIndex].Name, g.DisplayYear),
+		fyne.TextAlignCenter,
+		fyne.TextStyle{Bold: true},
+	)
 
 	content := container.NewPadded(
 		container.NewVBox(
@@ -82,19 +101,68 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 			container.NewHBox(
 				layout.NewSpacer(),
 				backMonthButton,
-				widget.NewLabelWithStyle(
-					fmt.Sprintf("%s - Year %v", g.CalendarData.Months[g.DisplayMonthIndex].Name, g.DisplayYear),
-					fyne.TextAlignCenter,
-					fyne.TextStyle{Bold: true},
-				),
+				monthYearLabel,
 				nextMonthButton,
+				layout.NewSpacer(),
+			),
+			container.NewHBox(
+				layout.NewSpacer(),
+				monthSelection,
+				yearEntry,
+				submitDateChangeButton,
 				layout.NewSpacer(),
 			),
 			weekdayGrid,
 			monthGrid,
-		))
+		),
+	)
 
 	return content
+}
+
+func (g *GUI) createMonthSelector() *widget.Select {
+	monthNames := make([]string, 0, len(g.CalendarData.Months))
+
+	for _, month := range g.CalendarData.Months {
+		monthNames = append(monthNames, month.Name)
+	}
+	return widget.NewSelect(monthNames, func(value string) {})
+}
+
+func (g *GUI) createMonthYearSelectorButton(selectedMonth *widget.Select, selectedYear *xwidget.NumericalEntry) *widget.Button {
+	button := widget.NewButtonWithIcon(
+		"",
+		fyne.Resource(theme.ConfirmIcon()),
+		func() {
+			for i, month := range g.CalendarData.Months {
+				if month.Name == selectedMonth.Selected {
+					g.DisplayMonthIndex = int32(i)
+					break
+				}
+			}
+
+			if selectedYear.Text == "" {
+				g.showError(
+					"Unable to change date.",
+					fmt.Errorf("please enter a year"),
+				)
+				return
+			}
+
+			year, err := strconv.ParseInt(selectedYear.Text, 10, 32)
+			if err != nil {
+				g.showError(
+					"Unable to change date.",
+					fmt.Errorf("invalid year: %w", err),
+				)
+				return
+			}
+
+			g.DisplayYear = int32(year)
+
+			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+		})
+	return button
 }
 
 func (g *GUI) nextMonth() error {
