@@ -1,216 +1,379 @@
 # Fabricated Calendar
 
-A Go library for creating and working with fully customizable calendar systems.
+A desktop application for creating and managing **fully customizable fantasy calendars**.
 
-Fabricated Calendar is designed for worldbuilders, game developers, tabletop RPG creators, and anyone who needs a calendar that doesn't follow the rules of the Gregorian calendar.
+Fabricated Calendar is designed for worldbuilders, tabletop RPG creators, game developers, writers, and anyone who needs a calendar that doesn't follow the rules of the Gregorian calendar.
 
-Instead of assuming 12 months, 7-day weeks, or 365-day years, every part of the calendar can be customized to fit a fictional world.
+Instead of assuming 12 months, 7 weekdays, or 365 days per year, Fabricated Calendar lets users define the structure of their own fictional calendar, including the number and names of weekdays, the number and length of months, and how those months are ordered.
 
 > **Status:** 🚧 Early Development
 
 ---
 
-## Features
+## ✨ Features
 
-Current functionality includes:
+### 👤 User Management
 
-- Create custom calendar systems
-- Define any number of months
-- Define any number of weekdays
-- Configure the number of days in each month
-- Create dates within a calendar
-- Convert dates to an absolute day number
-- Convert an absolute day number back into a date
-- Calculate weekday names
-- Compare dates
-- Sort collections of dates
-- Calculate the number of days between two dates
-- Format the time difference between two dates
+Fabricated Calendar includes basic account management:
+
+* Create a user account
+* Log in with a username and password
+* Log out of the current account
+* Delete a user account
+* Store passwords using Argon2id hashing
+* Validate email addresses during account creation
+
+User and calendar data are persisted in PostgreSQL.
 
 ---
 
-## Example
+### 📅 Calendar Management
 
-```go
-calendar := calendar.CalendarSystem{
-    Name: "Example Calendar",
+Users can create and manage multiple custom calendars.
 
-    Weekdays: []*calendar.WeekDay{
-        {Name: "Sun", Order: 1},
-        {Name: "Moon", Order: 2},
-        {Name: "Star", Order: 3},
-    },
+* Create calendars
+* View available calendars
+* Edit calendar names and descriptions
+* Delete calendars
+* Select a calendar to work with
 
-    Months: []*calendar.Month{
-        {Name: "Spring", Order: 1, NumDays: 30},
-        {Name: "Summer", Order: 2, NumDays: 30},
-        {Name: "Autumn", Order: 3, NumDays: 30},
-    },
-}
+Each calendar belongs to a user, allowing multiple independent calendars to be created and managed within an account.
 
-date, _ := calendar.NewDate(&calendar, 5, 2, 14)
+---
 
-fmt.Println(calendar.WeekdayName(date))
+### 🗓️ Custom Weekdays
+
+Weekdays are completely configurable for each calendar.
+
+* Create weekdays
+* Edit weekdays
+* Delete weekdays
+* Set weekday order
+* Use any number of weekdays
+* Give weekdays custom names
+
+A calendar does not have to use seven weekdays. A fictional calendar could have five, eight, ten, or any other number of weekdays.
+
+---
+
+### 🌙 Custom Months
+
+Months are also completely configurable.
+
+* Create months
+* Edit months
+* Delete months
+* Set month order
+* Set the number of days in each month
+* Give months custom names
+* Use any number of months
+
+Month lengths are independent of the Gregorian calendar.
+
+---
+
+### 🗓️ Custom Calendar Display
+
+The application includes a custom calendar renderer rather than relying on the Gregorian-based calendar.
+
+The calendar display supports:
+
+* Custom month names
+* Custom weekday names
+* Custom month lengths
+* Custom weekday counts
+* Year display
+* Month/year selection
+* Previous/next month pagination
+* Day number placement based on the calendar's own rules
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+You will need:
+
+* Go 1.26.3 or compatible
+* PostgreSQL
+* Goose
+* A system capable of running Fyne applications
+
+Fyne may require additional system libraries depending on the operating system.
+
+---
+
+## 🗄️ Database Setup
+
+Fabricated Calendar uses PostgreSQL for persistent storage.
+
+The database currently consists of four primary tables:
+
+```text
+users
+  │
+  └── calendar
+       ├── weekday
+       └── month
 ```
 
----
+### Users
 
-## Project Structure
+Stores account information including:
 
-```
-fabricated-calendar/
-│
-├── calendar/
-│   ├── calendar.go      # Core calendar calculations
-│   ├── date.go          # Date type and helpers
-│   ├── month.go         # Month definition
-│   └── weekday.go       # Weekday definition
-│
-├── main.go              # Example entry point
-└── go.mod
-```
+* Username
+* Hashed password
+* Email address
+* Creation timestamp
+* Update timestamp
 
----
+### Calendar
 
-## Core Concepts
+Stores the user's calendars and their descriptions.
 
-### CalendarSystem
+### Weekday
 
-A `CalendarSystem` defines the rules of a calendar.
+Stores the custom weekdays belonging to a calendar.
 
-It contains:
+Each weekday has:
 
-- calendar name
-- list of weekdays
-- list of months
-
-Many calculations are performed directly by the calendar system, including:
-
-- days in a year
-- weeks in a year
-- date conversion
-- weekday lookup
-- date sorting
-- elapsed time calculations
-
----
-
-### Date
-
-A `Date` represents a single point in time within a specific calendar.
-
-Each date stores:
-
-- calendar reference
-- year
-- month
-- day
-
-Dates can be compared using:
-
-- `Equals()`
-- `Before()`
-
----
+* Name
+* Display order
+* Calendar ID
+* User ID
 
 ### Month
 
-Months define:
+Stores the custom months belonging to a calendar.
 
-- name
-- order
-- number of days
+Each month has:
 
----
+* Name
+* Month order
+* Days in month
+* Calendar ID
+* User ID
 
-### WeekDay
-
-Weekdays define:
-
-- name
-- order
+Foreign keys use `ON DELETE CASCADE`, so deleting a user removes their calendars and deleting a calendar removes its associated months and weekdays.
 
 ---
 
-## Installation
+## ⚙️ Configuration
 
-Clone the repository:
+The application reads its database connection string from the `DATABASE_URL` environment variable.
 
-```bash
-git clone https://github.com/RavenFayrin/fabricated-calendar.git
+Create a `.env` file in the project root:
+
+```env
+DATABASE_URL=postgres://username:password@localhost:5432/fabricated_calendar?sslmode=disable
 ```
 
-Change into the project directory:
+Do not commit your `.env` file or database credentials to source control.
 
-```bash
-cd fabricated-calendar
+---
+
+## 🐘 Database Migrations
+
+Database migrations are located in:
+
+```text
+sql/schema/
 ```
 
-Run the application:
+They are applied in dependency order:
+
+```text
+001_users.sql
+002_calendar.sql
+003_weekday.sql
+004_months.sql
+```
+
+With Goose installed, migrations can be applied using:
+
+```bash
+goose -dir sql/schema postgres "$DATABASE_URL" up
+```
+
+---
+
+## ▶️ Running the Application
+
+After PostgreSQL is running and `DATABASE_URL` has been configured:
 
 ```bash
 go run .
 ```
 
----
+The project also includes:
 
-## Current API
-
-### CalendarSystem
-
-- `DaysInYear()`
-- `WeeksInYear()`
-- `DateToAbsoluteDay()`
-- `AbsoluteDayToDate()`
-- `WeekdayName()`
-- `SortDates()`
-- `DaysBetween()`
-- `FormattedTimeBetween()`
-
-### Date
-
-- `AbsoluteDay()`
-- `Equals()`
-- `Before()`
-
-### Constructors
-
-- `NewDate()`
-
----
-
-## Planned Features
-
-The long-term vision for Fabricated Calendar includes:
-
-- Multiple calendar systems
-- Leap year support
-- Custom eras
-- Event tracking
-- Recurring events
-- Holiday support
-- Calendar serialization
-- Import/export
-- Database persistence
-- REST API
-- Desktop GUI
-- Web interface
-- Calendar visualization
-- Timeline generation
-- Random calendar generation
-
----
-
-## Goals
-
-Fabricated Calendar aims to become a reusable engine for fictional timekeeping rather than a single calendar implementation.
-
-The project is intended to support worlds with completely custom calendars while providing an easy-to-use API for applications, games, and worldbuilding tools.
-
----
-
-## License
-
-No license has currently been specified.
-
+```bash
+./run.sh
 ```
+
+The development script sets the locale to `C.utf8` before starting the application. This helps avoid locale parsing issues with Fyne in environments such as WSL2.
+
+---
+
+## 🏗️ Architecture
+
+The project is separated into several major components.
+
+```text
+┌───────────────────────┐
+│       Fyne GUI        │
+│         gui/          │
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│   Application Logic   │
+│   internal/auth/      │
+│   internal/calendar/  │
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│       SQLC            │
+│  internal/database/   │
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│     PostgreSQL        │
+└───────────────────────┘
+```
+
+### GUI
+
+The `gui/` package contains the Fyne desktop interface.
+
+It is responsible for:
+
+* Login and account screens
+* Calendar selection
+* Calendar management
+* Month management
+* Weekday management
+* Calendar rendering
+* Month/year navigation
+* Refreshing the interface after database changes
+* Custom application theming
+
+### Authentication
+
+The `internal/auth/` package contains user-related business logic.
+
+It handles:
+
+* Password hashing
+* Password verification
+* Email validation
+* User creation
+* User deletion
+* Login
+
+### Calendar Logic
+
+The `internal/calendar/` package contains calendar-specific application logic.
+
+It handles:
+
+* Calendar CRUD operations
+* Month CRUD operations
+* Weekday CRUD operations
+* Loading complete calendar data
+* Calendar calculations
+* Month starting weekday calculations
+
+### Database
+
+PostgreSQL provides persistent storage.
+
+SQL queries are written manually under `sql/queries/` and generated into type-safe Go code using SQLC.
+
+Database schema changes are managed using Goose migrations under `sql/schema/`.
+
+### 🧪 Testing
+
+Run the project's Go tests with:
+
+```bash
+go test ./...
+```
+
+For verbose output:
+
+```bash
+go test -v ./...
+```
+
+Current tests include authentication validation and calendar calculation tests.
+
+Calendar calculation tests cover:
+
+* Days per year
+* Multiple month lengths
+* Different weekday counts
+* Month starting weekdays
+* Month-to-month weekday continuation
+* Year-to-year weekday continuation
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology     | Purpose                            |
+| -------------- | ---------------------------------- |
+| **Go**         | Application language               |
+| **Fyne**       | Desktop GUI framework              |
+| **PostgreSQL** | Persistent database                |
+| **SQLC**       | Type-safe database code generation |
+| **Goose**      | Database schema migrations         |
+| **Argon2id**   | Password hashing                   |
+| **UUID**       | Database identifiers               |
+| **godotenv**   | Local environment configuration    |
+
+---
+
+## 📋 Current Release
+
+The current release provides the core functionality needed to create and use a custom fantasy calendar.
+
+## 🔮 Future Development
+
+Fabricated Calendar is still under active development. Planned improvements include:
+
+* Event creation and display
+* Recurring events
+* Holiday support
+* Expanded calendar rules
+* Additional customization options
+
+---
+
+## 🎯 Project Goals
+
+Fabricated Calendar is intended to make fictional timekeeping easy to create and manage.
+
+The goal is not to reproduce the Gregorian calendar, but to provide a foundation where the **rules of time itself can be customized**.
+
+A finished calendar might have:
+
+* Five weekdays
+* Thirteen months
+* Months with completely different lengths
+* A year that doesn't contain 365 days
+* Custom month and weekday names
+* A unique fictional world's own concept of time
+
+The application provides the tools needed to define those rules and visualize the resulting calendar.
+
+---
+
+## 📜 License
+
+Fabricated Calendar is licensed under the **Apache License 2.0**.
+
+See [`LICENSE`](LICENSE) for the complete license text.
