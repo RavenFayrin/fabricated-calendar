@@ -8,6 +8,8 @@ Instead of assuming 12 months, 7 weekdays, or 365 days per year, Fabricated Cale
 
 > **Status:** 🚧 Early Development
 
+<img width="1119" height="696" alt="image" src="https://github.com/user-attachments/assets/8238bb7e-3a33-436f-89e1-309f664091ad" />
+
 ---
 
 ## ✨ Features
