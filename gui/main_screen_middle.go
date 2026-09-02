@@ -160,7 +160,7 @@ func (g *GUI) createMonthGrid() fyne.CanvasObject {
 		layout.NewGridLayout(columns),
 	)
 
-	startWeekdayIndex := g.CalendarData.GetMonthStartWeekday(
+	startWeekdayIndex := g.CalendarData.MonthStartWeekday(
 		int(g.DisplayMonthIndex),
 		int(g.DisplayYear),
 	)

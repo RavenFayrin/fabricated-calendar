@@ -57,7 +57,7 @@ func (c CalendarData) daysPerYear() int {
 	return total
 }
 
-func (c CalendarData) GetMonthStartWeekday(monthIndex int, year int) int {
+func (c CalendarData) MonthStartWeekday(monthIndex int, year int) int {
 	totalDays := 0
 
 	totalDays += c.daysPerYear() * year
