@@ -106,11 +106,9 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 				layout.NewSpacer(),
 			),
 			container.NewHBox(
-				layout.NewSpacer(),
 				monthSelection,
 				yearEntry,
 				submitDateChangeButton,
-				layout.NewSpacer(),
 			),
 			weekdayGrid,
 			monthGrid,

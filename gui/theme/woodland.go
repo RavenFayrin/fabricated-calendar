@@ -77,7 +77,9 @@ func (WoodlandTheme) Size(s fyne.ThemeSizeName) float32 {
 	case theme.SizeNameInlineIcon:
 		return 25
 	case theme.SizeNamePadding:
-		return 5
+		return 4
+	case theme.SizeNameInnerPadding:
+		return 8
 	case theme.SizeNameScrollBar:
 		return 10
 	case theme.SizeNameScrollBarSmall:
