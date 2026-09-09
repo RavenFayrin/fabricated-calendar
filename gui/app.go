@@ -28,7 +28,7 @@ type GUI struct {
 }
 
 func Start(app fyne.App, cfg config.Config) {
-	app.Settings().SetTheme(theme.DefaultTheme{})
+	app.Settings().SetTheme(theme.WoodlandTheme{})
 	window := app.NewWindow("Fabricated Calendar")
 
 	gui := GUI{
