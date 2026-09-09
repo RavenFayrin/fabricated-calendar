@@ -20,34 +20,22 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 	// Error checker
 	err := g.checkCalendarSelected()
 	if err != nil {
-		content := container.NewVBox(
-			widget.NewLabelWithStyle(
+		content := container.NewPadded(
+			widget.NewCard(
 				"No Calendar Selected",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			widget.NewLabelWithStyle(
 				"Select a calendar above to begin.",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: false},
-			),
-		)
+				nil,
+			))
 		return content
 	}
 	err = g.checkCalendarData()
 	if err != nil {
-		content := container.NewVBox(
-			widget.NewLabelWithStyle(
+		content := container.NewPadded(
+			widget.NewCard(
 				"No Months or Weekdays Created",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			widget.NewLabelWithStyle(
 				"Create months and/or weekdays to begin.",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: false},
-			),
-		)
+				nil,
+			))
 		return content
 	}
 
