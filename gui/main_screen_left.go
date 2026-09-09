@@ -21,25 +21,6 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 		return container.NewVBox()
 	}
 
-	// Text
-	titleText := widget.NewLabelWithStyle(
-		"Calendar Tools",
-		fyne.TextAlignCenter,
-		fyne.TextStyle{Bold: true},
-	)
-
-	weekdaysText := widget.NewLabelWithStyle(
-		"Weekdays",
-		fyne.TextAlignCenter,
-		fyne.TextStyle{Bold: true},
-	)
-
-	monthsText := widget.NewLabelWithStyle(
-		"Months",
-		fyne.TextAlignCenter,
-		fyne.TextStyle{Bold: true},
-	)
-
 	// Create Calendar Parts Buttons
 	createWeekdayButton := widget.NewButton("+ Add Weekday", func() {
 		err := g.checkCalendarSelected()
@@ -69,23 +50,35 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	weekdayLabels := g.createWeekdayLables(dbWeekdays)
 	monthLabels := g.createMonthLables(dbMonths)
 
-	// Calendar tools content
-	tools := container.NewVBox(
-		titleText,
-		weekdaysText,
+	// Content
+	weekdayContent := container.NewVBox(
 		weekdayLabels,
 		createWeekdayButton,
-		monthsText,
+	)
+
+	monthContent := container.NewVBox(
 		monthLabels,
 		createMonthButton,
 	)
 
-	// Add padding between the content and the left side
-	// of the window.
-	padded := container.NewPadded(tools)
+	// Calendar tools content
+	tools := container.NewPadded(
+		widget.NewCard(
+			"Calendar Tools",
+			"",
+			widget.NewAccordion(
+				widget.NewAccordionItem(
+					"Weekdays",
+					weekdayContent,
+				),
+				widget.NewAccordionItem(
+					"Months",
+					monthContent,
+				),
+			)))
 
 	// Make the tools scrollable.
-	scroll := container.NewVScroll(padded)
+	scroll := container.NewVScroll(tools)
 
 	return scroll
 }
