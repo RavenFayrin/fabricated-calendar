@@ -2,9 +2,11 @@ package gui
 
 import (
 	"fmt"
+	"image/color"
 	"strconv"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
@@ -80,28 +82,25 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 	)
 
 	content := container.NewPadded(
-		container.NewVBox(
-			widget.NewLabelWithStyle(
-				g.Calendar.Name,
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			container.NewHBox(
-				layout.NewSpacer(),
-				backMonthButton,
-				monthYearLabel,
-				nextMonthButton,
-				layout.NewSpacer(),
-			),
-			container.NewHBox(
-				monthSelection,
-				yearEntry,
-				submitDateChangeButton,
-			),
-			weekdayGrid,
-			monthGrid,
-		),
-	)
+		widget.NewCard(
+			g.Calendar.Name,
+			g.Calendar.Description.String,
+			container.NewPadded(
+				container.NewVBox(
+					container.NewGridWithColumns(
+						7,
+						monthSelection,
+						yearEntry,
+						submitDateChangeButton,
+						canvas.NewRectangle(color.Transparent),
+						backMonthButton,
+						monthYearLabel,
+						nextMonthButton,
+					),
+					weekdayGrid,
+					monthGrid,
+				),
+			)))
 
 	return content
 }
