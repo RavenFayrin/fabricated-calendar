@@ -22,6 +22,13 @@ func (g *GUI) checkCalendarSelected() error {
 	return nil
 }
 
+func (g *GUI) checkUserLoggedIn() error {
+	if g.User == nil {
+		return fmt.Errorf("no user logged in")
+	}
+	return nil
+}
+
 func (g *GUI) fetchCalendarData() error {
 	calendarData, err := calendar.GetCalendarData(
 		g.Config,

@@ -36,6 +36,7 @@ func (g *GUI) showLogin() {
 
 		g.User = &user
 
+		g.Window.SetMainMenu(g.makeMenu())
 		g.showMainScreen()
 	}
 
