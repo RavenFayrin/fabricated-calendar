@@ -68,13 +68,6 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 		g.showMainScreen()
 	})
 
-	// Logout Button
-	logoutButton := widget.NewButton("Log Out", func() {
-		g.User = &database.User{}
-		g.Calendar = &database.Calendar{}
-		g.showLogin()
-	})
-
 	// Delete User Button
 	deleteUserButton := widget.NewButton("DELETE USER", func() {
 		err := auth.DeleteUser(g.Config, g.User.ID)
@@ -100,7 +93,6 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 			deleteCalendarButton,
 			layout.NewSpacer(),
 			deleteUserButton,
-			logoutButton,
 		))
 
 	return content
