@@ -10,12 +10,17 @@ import (
 
 func (g *GUI) showLogin() {
 	username := widget.NewEntry()
-	username.SetPlaceHolder("Username")
+	username.SetPlaceHolder("Enter Username")
 
 	password := widget.NewPasswordEntry()
-	password.SetPlaceHolder("Password")
+	password.SetPlaceHolder("Enter Password")
 
-	loginButton := widget.NewButton("Login", func() {
+	form := widget.NewForm(
+		widget.NewFormItem("Username", username),
+		widget.NewFormItem("Password", password),
+	)
+
+	form.OnSubmit = func() {
 		user, err := auth.Login(
 			g.Config,
 			username.Text,
@@ -32,23 +37,21 @@ func (g *GUI) showLogin() {
 		g.User = &user
 
 		g.showMainScreen()
-	})
+	}
 
 	createUserButton := widget.NewButton("Create New User", func() {
 		g.showUserCreation()
 	})
 
-	content := container.NewPadded(container.NewVBox(
-		widget.NewLabelWithStyle(
-			"Fabricated Calendar",
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
-		),
-		username,
-		password,
-		loginButton,
-		createUserButton,
-	))
+	content := container.NewPadded(
+		widget.NewCard(
+			"Fabricated Calendar Login",
+			"",
+			container.NewVBox(
+				form,
+				createUserButton,
+			),
+		))
 
 	g.Window.SetContent(content)
 }
