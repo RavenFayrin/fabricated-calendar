@@ -39,6 +39,7 @@ func (g *GUI) showLogin() {
 		g.Window.SetMainMenu(g.makeMenu())
 		g.showMainScreen()
 	}
+	form.SubmitText = "Login"
 
 	createUserButton := widget.NewButton("Create New User", func() {
 		g.showUserCreation()
@@ -68,12 +69,27 @@ func (g *GUI) userCreationForm() *fyne.Container {
 	username.SetPlaceHolder("Username")
 
 	password := widget.NewPasswordEntry()
-	password.SetPlaceHolder("Password: Must be 8 characters")
+	password.SetPlaceHolder("Password")
 
 	email := widget.NewEntry()
-	email.SetPlaceHolder("Email: example@example.com")
+	email.SetPlaceHolder("example@example.com")
 
-	submitButton := widget.NewButton("Create User", func() {
+	form := widget.NewForm(
+		widget.NewFormItem(
+			"Username",
+			username,
+		),
+		widget.NewFormItem(
+			"Password",
+			password,
+		),
+		widget.NewFormItem(
+			"Email",
+			email,
+		),
+	)
+
+	form.OnSubmit = func() {
 		err := auth.CreateUser(
 			g.Config,
 			username.Text,
@@ -86,24 +102,20 @@ func (g *GUI) userCreationForm() *fyne.Container {
 		}
 
 		g.showLogin()
-	})
+	}
+	form.SubmitText = "Create User"
 
-	closeButton := widget.NewButton("Close", func() {
+	form.OnCancel = func() {
 		g.showLogin()
-	})
+	}
+	form.CancelText = "Cancel"
 
-	content := container.NewVBox(
-		widget.NewLabelWithStyle(
+	content := container.NewPadded(
+		widget.NewCard(
 			"Create New User",
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
-		),
-		username,
-		password,
-		email,
-		submitButton,
-		closeButton,
-	)
+			"",
+			form,
+		))
 
 	return content
 }
