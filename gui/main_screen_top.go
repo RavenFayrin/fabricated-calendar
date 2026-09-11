@@ -1,13 +1,12 @@
 package gui
 
 import (
-	"fabricated-calendar/internal/auth"
 	"fabricated-calendar/internal/calendar"
 	"fabricated-calendar/internal/database"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -40,19 +39,20 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
 		g.generateMainScreenLeftDisplay(MainLeftDisplay)
 	})
+	calendarSelect.PlaceHolder = "Select Calendar"
 
 	// Create Calendar Button
-	createCalendarButton := widget.NewButton("Create New Calendar", func() {
+	createCalendarButton := widget.NewButtonWithIcon("Create New Calendar", theme.ContentAddIcon(), func() {
 		g.generateMainScreenMiddleDisplay(CreateCalendarForm)
 	})
 
 	// Edit Calendar Button
-	editCalendarButton := widget.NewButton("Edit Calendar", func() {
+	editCalendarButton := widget.NewButtonWithIcon("Edit Calendar", theme.DocumentCreateIcon(), func() {
 		g.generateMainScreenMiddleDisplay(EditCalendarForm)
 	})
 
 	// Delete Calendar Button
-	deleteCalendarButton := widget.NewButton("Delete Calendar", func() {
+	deleteCalendarButton := widget.NewButtonWithIcon("Delete Calendar", theme.DeleteIcon(), func() {
 		err := g.checkCalendarSelected()
 		if err != nil {
 			g.showError("Calendar not selected.", err)
@@ -68,32 +68,22 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 		g.showMainScreen()
 	})
 
-	// Delete User Button
-	deleteUserButton := widget.NewButton("DELETE USER", func() {
-		err := auth.DeleteUser(g.Config, g.User.ID)
-		if err != nil {
-			g.showError("Could not delete user.", err)
-		}
-		g.User = &database.User{}
-		g.Calendar = &database.Calendar{}
-		g.showLogin()
-	})
+	calendarCard := widget.NewCard(
+		"",
+		"",
+		container.NewGridWithColumns(
+			4,
+			calendarSelect,
+			editCalendarButton,
+			deleteCalendarButton,
+			createCalendarButton,
+		),
+	)
 
 	// Content Creator
 	content := container.NewPadded(
-		container.NewHBox(
-			widget.NewLabelWithStyle(
-				"Calendar: ",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			calendarSelect,
-			createCalendarButton,
-			editCalendarButton,
-			deleteCalendarButton,
-			layout.NewSpacer(),
-			deleteUserButton,
-		))
+		calendarCard,
+	)
 
 	return content
 }
