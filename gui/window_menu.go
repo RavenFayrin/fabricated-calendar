@@ -11,6 +11,7 @@ import (
 )
 
 func (g *GUI) makeMenu() *fyne.MainMenu {
+	// Menu Action Buttons
 	logout := fyne.NewMenuItemWithIcon(
 		"Log Out",
 		theme.LogoutIcon(),
@@ -47,6 +48,7 @@ func (g *GUI) makeMenu() *fyne.MainMenu {
 		},
 	)
 
+	// Menu Items Display
 	manageUser := fyne.NewMenuItemWithIcon(
 		"Manage Account",
 		theme.AccountIcon(),
@@ -57,6 +59,7 @@ func (g *GUI) makeMenu() *fyne.MainMenu {
 		deleteUser,
 	)
 
+	// User Error Check
 	var title string
 
 	err := g.checkUserLoggedIn()
