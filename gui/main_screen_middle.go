@@ -75,10 +75,12 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 	monthGrid := g.createMonthGrid()
 
 	// Labels
-	monthYearLabel := widget.NewLabelWithStyle(
+	monthYearLabel := textLabel(
 		fmt.Sprintf("%s - Year %v", g.CalendarData.Months[g.DisplayMonthIndex].Name, g.DisplayYear),
-		fyne.TextAlignCenter,
-		fyne.TextStyle{Bold: true},
+		LabelOptions{
+			Alignment: fyne.TextAlignCenter,
+			Bold:      true,
+		},
 	)
 
 	content := container.NewPadded(
@@ -195,10 +197,12 @@ func (g *GUI) createWeekdayGrid() fyne.CanvasObject {
 		layout.NewGridLayout(len(g.CalendarData.Weekdays)))
 
 	for _, weekday := range g.CalendarData.Weekdays {
-		weekdayLable := widget.NewLabelWithStyle(
+		weekdayLable := textLabel(
 			weekday.Name,
-			fyne.TextAlignCenter,
-			fyne.TextStyle{Bold: true},
+			LabelOptions{
+				Alignment: fyne.TextAlignCenter,
+				Bold:      true,
+			},
 		)
 
 		weekdayGrid.Add(weekdayLable)

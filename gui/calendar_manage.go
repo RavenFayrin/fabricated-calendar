@@ -40,10 +40,12 @@ func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 
 	content := container.NewPadded(
 		container.NewVBox(
-			widget.NewLabelWithStyle(
+			textLabel(
 				"Create New Calendar",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
+				LabelOptions{
+					Alignment: fyne.TextAlignCenter,
+					Bold:      true,
+				},
 			),
 			calName,
 			calDesc,
@@ -85,10 +87,12 @@ func (g *GUI) showEditCalendar(calID uuid.UUID) fyne.CanvasObject {
 
 	content := container.NewPadded(
 		container.NewVBox(
-			widget.NewLabelWithStyle(
+			textLabel(
 				"Edit Calendar",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
+				LabelOptions{
+					Alignment: fyne.TextAlignCenter,
+					Bold:      true,
+				},
 			),
 			calName,
 			calDesc,

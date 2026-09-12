@@ -54,11 +54,12 @@ func (g *GUI) showCreateMonth() fyne.CanvasObject {
 
 	content := container.NewPadded(
 		container.NewVBox(
-			widget.NewLabelWithStyle(
+			textLabel(
 				"Create New Month",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
+				LabelOptions{
+					Alignment: fyne.TextAlignCenter,
+					Bold:      true,
+				}),
 			monthName,
 			monthOrder,
 			monthLength,
@@ -108,10 +109,12 @@ func (g *GUI) showEditMonth(monthID uuid.UUID) fyne.CanvasObject {
 
 	content := container.NewPadded(
 		container.NewVBox(
-			widget.NewLabelWithStyle(
+			textLabel(
 				"Update Month",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
+				LabelOptions{
+					Alignment: fyne.TextAlignCenter,
+					Bold:      true,
+				},
 			),
 			monthName,
 			monthOrder,
@@ -127,7 +130,7 @@ func (g *GUI) createMonthLables(months []database.Month) fyne.CanvasObject {
 	vbox := container.NewVBox()
 
 	for _, dbMonth := range months {
-		monthLabel := widget.NewLabel(dbMonth.Name)
+		monthLabel := textLabel(dbMonth.Name)
 
 		editButton := widget.NewButtonWithIcon(
 			"",

@@ -50,10 +50,12 @@ func (g *GUI) showCreateWeekday() fyne.CanvasObject {
 
 	content := container.NewPadded(
 		container.NewVBox(
-			widget.NewLabelWithStyle(
+			textLabel(
 				"Create New Weekday",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
+				LabelOptions{
+					Alignment: fyne.TextAlignCenter,
+					Bold:      true,
+				},
 			),
 			weekdayName,
 			weekdayOrder,
@@ -99,10 +101,12 @@ func (g *GUI) showEditWeekday(weekdayID uuid.UUID) fyne.CanvasObject {
 
 	content := container.NewPadded(
 		container.NewVBox(
-			widget.NewLabelWithStyle(
+			textLabel(
 				"Update Weekday",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
+				LabelOptions{
+					Alignment: fyne.TextAlignCenter,
+					Bold:      true,
+				},
 			),
 			weekdayName,
 			weekdayOrder,
@@ -117,7 +121,7 @@ func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject
 	vbox := container.NewVBox()
 
 	for _, dbWeekday := range weekdays {
-		weekdayLabel := widget.NewLabel(dbWeekday.Name)
+		weekdayLabel := textLabel(dbWeekday.Name)
 
 		editButton := widget.NewButtonWithIcon(
 			"",

@@ -7,7 +7,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
 )
 
 func (g *GUI) makeMenu() *fyne.MainMenu {
@@ -29,7 +28,7 @@ func (g *GUI) makeMenu() *fyne.MainMenu {
 				"Delete User",
 				"Confirm",
 				"Cancel",
-				widget.NewLabel("Are you sure you want to delete this account? This action cannot be undone."),
+				textLabel("Are you sure you want to delete this account? This action cannot be undone."),
 				func(confirmed bool) {
 					if !confirmed {
 						return
