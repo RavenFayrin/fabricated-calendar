@@ -8,18 +8,21 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
 	"github.com/google/uuid"
-
-	xwidget "fyne.io/x/fyne/widget"
 )
 
 func (g *GUI) showCreateWeekday() fyne.CanvasObject {
-	weekdayName := widget.NewEntry()
-	weekdayName.SetPlaceHolder("Weekday Name")
+	weekdayName := entry(
+		EntryOptions{
+			PlaceHolder: "Weekday Name",
+		},
+	)
 
-	weekdayOrder := xwidget.NewNumericalEntry()
-	weekdayOrder.SetPlaceHolder("Weekday Order")
+	weekdayOrder := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "Weekday Order",
+		},
+	)
 
 	submitButton := button(
 		func() {
@@ -77,11 +80,17 @@ func (g *GUI) showCreateWeekday() fyne.CanvasObject {
 }
 
 func (g *GUI) showEditWeekday(weekdayID uuid.UUID) fyne.CanvasObject {
-	weekdayName := widget.NewEntry()
-	weekdayName.SetPlaceHolder("Weekday Name")
+	weekdayName := entry(
+		EntryOptions{
+			PlaceHolder: "Weekday Name",
+		},
+	)
 
-	weekdayOrder := xwidget.NewNumericalEntry()
-	weekdayOrder.SetPlaceHolder("Weekday Order")
+	weekdayOrder := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "Weekday Order",
+		},
+	)
 
 	submitButton := button(
 		func() {

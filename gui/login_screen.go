@@ -9,11 +9,18 @@ import (
 )
 
 func (g *GUI) showLogin() {
-	username := widget.NewEntry()
-	username.SetPlaceHolder("Enter Username")
+	username := entry(
+		EntryOptions{
+			PlaceHolder: "Enter Username",
+		},
+	)
 
-	password := widget.NewPasswordEntry()
-	password.SetPlaceHolder("Enter Password")
+	password := entry(
+		EntryOptions{
+			PlaceHolder: "Enter Password",
+			Password:    true,
+		},
+	)
 
 	form := widget.NewForm(
 		widget.NewFormItem("Username", username),
@@ -70,14 +77,24 @@ func (g *GUI) showUserCreation() {
 }
 
 func (g *GUI) userCreationForm() *fyne.Container {
-	username := widget.NewEntry()
-	username.SetPlaceHolder("Username")
+	username := entry(
+		EntryOptions{
+			PlaceHolder: "Username",
+		},
+	)
 
-	password := widget.NewPasswordEntry()
-	password.SetPlaceHolder("Password")
+	password := entry(
+		EntryOptions{
+			PlaceHolder: "Password",
+			Password:    true,
+		},
+	)
 
-	email := widget.NewEntry()
-	email.SetPlaceHolder("example@example.com")
+	email := entry(
+		EntryOptions{
+			PlaceHolder: "example@example.com",
+		},
+	)
 
 	form := widget.NewForm(
 		widget.NewFormItem(

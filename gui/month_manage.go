@@ -8,21 +8,27 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
 	"github.com/google/uuid"
-
-	xwidget "fyne.io/x/fyne/widget"
 )
 
 func (g *GUI) showCreateMonth() fyne.CanvasObject {
-	monthName := widget.NewEntry()
-	monthName.SetPlaceHolder("Month Name")
+	monthName := entry(
+		EntryOptions{
+			PlaceHolder: "Month Name",
+		},
+	)
 
-	monthOrder := xwidget.NewNumericalEntry()
-	monthOrder.SetPlaceHolder("Month Order")
+	monthOrder := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "Month Order",
+		},
+	)
 
-	monthLength := xwidget.NewNumericalEntry()
-	monthLength.SetPlaceHolder("Month Length")
+	monthLength := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "Month Length",
+		},
+	)
 
 	submitButton := button(
 		func() {
@@ -81,14 +87,23 @@ func (g *GUI) showCreateMonth() fyne.CanvasObject {
 }
 
 func (g *GUI) showEditMonth(monthID uuid.UUID) fyne.CanvasObject {
-	monthName := widget.NewEntry()
-	monthName.SetPlaceHolder("Month Name")
+	monthName := entry(
+		EntryOptions{
+			PlaceHolder: "Month Name",
+		},
+	)
 
-	monthOrder := xwidget.NewNumericalEntry()
-	monthOrder.SetPlaceHolder("Month Order")
+	monthOrder := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "Month Order",
+		},
+	)
 
-	monthLength := xwidget.NewNumericalEntry()
-	monthLength.SetPlaceHolder("Month Length")
+	monthLength := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "Month Length",
+		},
+	)
 
 	submitButton := button(
 		func() {

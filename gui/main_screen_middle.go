@@ -69,8 +69,11 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 	// Create Month/Year Selection
 	monthSelection := g.createMonthSelector()
 
-	yearEntry := xwidget.NewNumericalEntry()
-	yearEntry.SetPlaceHolder("Year Selector")
+	yearEntry := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "Year Selector",
+		},
+	)
 
 	submitDateChangeButton := g.createMonthYearSelectorButton(monthSelection, yearEntry)
 

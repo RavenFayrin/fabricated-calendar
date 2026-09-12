@@ -6,16 +6,21 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 	"github.com/google/uuid"
 )
 
 func (g *GUI) showCreateCalendar() fyne.CanvasObject {
-	calName := widget.NewEntry()
-	calName.SetPlaceHolder("Calendar Name")
+	calName := entry(
+		EntryOptions{
+			PlaceHolder: "Calendar Name",
+		},
+	)
 
-	calDesc := widget.NewEntry()
-	calDesc.SetPlaceHolder("Calendar Description")
+	calDesc := entry(
+		EntryOptions{
+			PlaceHolder: "Calendar Description",
+		},
+	)
 
 	submitButton := button(
 		func() {
@@ -67,11 +72,17 @@ func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 }
 
 func (g *GUI) showEditCalendar(calID uuid.UUID) fyne.CanvasObject {
-	calName := widget.NewEntry()
-	calName.SetPlaceHolder("Calendar Name")
+	calName := entry(
+		EntryOptions{
+			PlaceHolder: "Calendar Name",
+		},
+	)
 
-	calDesc := widget.NewEntry()
-	calDesc.SetPlaceHolder("Calendar Description")
+	calDesc := entry(
+		EntryOptions{
+			PlaceHolder: "Calendar Description",
+		},
+	)
 
 	submitButton := button(
 		func() {
