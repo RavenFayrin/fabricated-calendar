@@ -17,26 +17,36 @@ func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 	calDesc := widget.NewEntry()
 	calDesc.SetPlaceHolder("Calendar Description")
 
-	submitButton := widget.NewButton("Create Calendar", func() {
-		err := calendar.CreateCalendar(
-			g.Config,
-			calName.Text,
-			calDesc.Text,
-			g.User.ID,
-		)
-		if err != nil {
-			g.showError("Unable to create calendar.", err)
-			return
-		}
+	submitButton := button(
+		func() {
+			err := calendar.CreateCalendar(
+				g.Config,
+				calName.Text,
+				calDesc.Text,
+				g.User.ID,
+			)
+			if err != nil {
+				g.showError("Unable to create calendar.", err)
+				return
+			}
 
-		g.generateMainScreenTopDisplay(MainTopDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	})
+			g.generateMainScreenTopDisplay(MainTopDisplay)
+			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			g.generateMainScreenLeftDisplay(MainLeftDisplay)
+		},
+		ButtonOptions{
+			Text: "Create Calendar",
+		},
+	)
 
-	closeButton := widget.NewButton("Close", func() {
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
+	closeButton := button(
+		func() {
+			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+		},
+		ButtonOptions{
+			Text: "Close",
+		},
+	)
 
 	content := container.NewPadded(
 		container.NewVBox(
@@ -63,27 +73,37 @@ func (g *GUI) showEditCalendar(calID uuid.UUID) fyne.CanvasObject {
 	calDesc := widget.NewEntry()
 	calDesc.SetPlaceHolder("Calendar Description")
 
-	submitButton := widget.NewButton("Edit Calendar", func() {
-		err := calendar.UpdateCalendar(
-			g.Config,
-			calName.Text,
-			calDesc.Text,
-			calID,
-		)
-		if err != nil {
-			g.showError("Unable to edit calendar.", err)
-			return
-		}
+	submitButton := button(
+		func() {
+			err := calendar.UpdateCalendar(
+				g.Config,
+				calName.Text,
+				calDesc.Text,
+				calID,
+			)
+			if err != nil {
+				g.showError("Unable to edit calendar.", err)
+				return
+			}
 
-		g.Calendar = &database.Calendar{}
-		g.generateMainScreenTopDisplay(MainTopDisplay)
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
+			g.Calendar = &database.Calendar{}
+			g.generateMainScreenTopDisplay(MainTopDisplay)
+			g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+		},
+		ButtonOptions{
+			Text: "Edit Calendar",
+		},
+	)
 
-	closeButton := widget.NewButton("Close", func() {
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
+	closeButton := button(
+		func() {
+			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+		},
+		ButtonOptions{
+			Text: "Close",
+		},
+	)
 
 	content := container.NewPadded(
 		container.NewVBox(

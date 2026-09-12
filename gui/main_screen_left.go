@@ -22,25 +22,35 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	}
 
 	// Create Calendar Parts Buttons
-	createWeekdayButton := widget.NewButton("+ Add Weekday", func() {
-		err := g.checkCalendarSelected()
-		if err != nil {
-			g.showError("Calendar not selected.", err)
-			return
-		}
+	createWeekdayButton := button(
+		func() {
+			err := g.checkCalendarSelected()
+			if err != nil {
+				g.showError("Calendar not selected.", err)
+				return
+			}
 
-		g.generateMainScreenLeftDisplay(CreateWeekdayForm)
-	})
+			g.generateMainScreenLeftDisplay(CreateWeekdayForm)
+		},
+		ButtonOptions{
+			Text: "+ Add Weekday",
+		},
+	)
 
-	createMonthButton := widget.NewButton("+ Add Month", func() {
-		err := g.checkCalendarSelected()
-		if err != nil {
-			g.showError("Calendar not selected.", err)
-			return
-		}
+	createMonthButton := button(
+		func() {
+			err := g.checkCalendarSelected()
+			if err != nil {
+				g.showError("Calendar not selected.", err)
+				return
+			}
 
-		g.generateMainScreenLeftDisplay(CreateMonthForm)
-	})
+			g.generateMainScreenLeftDisplay(CreateMonthForm)
+		},
+		ButtonOptions{
+			Text: "+ Add Month",
+		},
+	)
 
 	// Retrieve Calendar Parts
 	dbWeekdays := g.getWeekdays()

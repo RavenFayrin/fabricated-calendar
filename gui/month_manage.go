@@ -24,33 +24,43 @@ func (g *GUI) showCreateMonth() fyne.CanvasObject {
 	monthLength := xwidget.NewNumericalEntry()
 	monthLength.SetPlaceHolder("Month Length")
 
-	submitButton := widget.NewButton("Create Month", func() {
-		err := calendar.CreateMonth(
-			g.Config,
-			monthName.Text,
-			monthOrder.Text,
-			monthLength.Text,
-			g.Calendar.ID,
-			g.User.ID,
-		)
-		if err != nil {
-			g.showError("Unable to create month.", err)
-			return
-		}
+	submitButton := button(
+		func() {
+			err := calendar.CreateMonth(
+				g.Config,
+				monthName.Text,
+				monthOrder.Text,
+				monthLength.Text,
+				g.Calendar.ID,
+				g.User.ID,
+			)
+			if err != nil {
+				g.showError("Unable to create month.", err)
+				return
+			}
 
-		err = g.fetchCalendarData()
-		if err != nil {
-			g.showError("Unable to update calendar.", err)
-			return
-		}
+			err = g.fetchCalendarData()
+			if err != nil {
+				g.showError("Unable to update calendar.", err)
+				return
+			}
 
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
+			g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+		},
+		ButtonOptions{
+			Text: "Create Month",
+		},
+	)
 
-	closeButton := widget.NewButton("Close", func() {
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	})
+	closeButton := button(
+		func() {
+			g.generateMainScreenLeftDisplay(MainLeftDisplay)
+		},
+		ButtonOptions{
+			Text: "Close",
+		},
+	)
 
 	content := container.NewPadded(
 		container.NewVBox(
@@ -80,32 +90,42 @@ func (g *GUI) showEditMonth(monthID uuid.UUID) fyne.CanvasObject {
 	monthLength := xwidget.NewNumericalEntry()
 	monthLength.SetPlaceHolder("Month Length")
 
-	submitButton := widget.NewButton("Update Month", func() {
-		err := calendar.UpdateMonth(
-			g.Config,
-			monthName.Text,
-			monthOrder.Text,
-			monthLength.Text,
-			monthID,
-		)
-		if err != nil {
-			g.showError("Unable to update month.", err)
-			return
-		}
+	submitButton := button(
+		func() {
+			err := calendar.UpdateMonth(
+				g.Config,
+				monthName.Text,
+				monthOrder.Text,
+				monthLength.Text,
+				monthID,
+			)
+			if err != nil {
+				g.showError("Unable to update month.", err)
+				return
+			}
 
-		err = g.fetchCalendarData()
-		if err != nil {
-			g.showError("Unable to update month.", err)
-			return
-		}
+			err = g.fetchCalendarData()
+			if err != nil {
+				g.showError("Unable to update month.", err)
+				return
+			}
 
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
+			g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+		},
+		ButtonOptions{
+			Text: "Update Month",
+		},
+	)
 
-	closeButton := widget.NewButton("Close", func() {
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	})
+	closeButton := button(
+		func() {
+			g.generateMainScreenLeftDisplay(MainLeftDisplay)
+		},
+		ButtonOptions{
+			Text: "Close",
+		},
+	)
 
 	content := container.NewPadded(
 		container.NewVBox(
@@ -132,17 +152,16 @@ func (g *GUI) createMonthLables(months []database.Month) fyne.CanvasObject {
 	for _, dbMonth := range months {
 		monthLabel := textLabel(dbMonth.Name)
 
-		editButton := widget.NewButtonWithIcon(
-			"",
-			theme.DocumentCreateIcon(),
+		editButton := button(
 			func() {
 				g.generateMainScreenLeftDisplay(EditMonthForm, dbMonth.ID)
 			},
+			ButtonOptions{
+				Icon: theme.DocumentCreateIcon(),
+			},
 		)
 
-		deleteButton := widget.NewButtonWithIcon(
-			"",
-			theme.DeleteIcon(),
+		deleteButton := button(
 			func() {
 				err := calendar.DeleteMonth(g.Config, dbMonth.ID)
 				if err != nil {
@@ -155,6 +174,9 @@ func (g *GUI) createMonthLables(months []database.Month) fyne.CanvasObject {
 				}
 				g.generateMainScreenLeftDisplay(MainLeftDisplay)
 				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			ButtonOptions{
+				Icon: theme.DeleteIcon(),
 			},
 		)
 

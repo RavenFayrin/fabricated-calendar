@@ -41,9 +41,14 @@ func (g *GUI) showLogin() {
 	}
 	form.SubmitText = "Login"
 
-	createUserButton := widget.NewButton("Create New User", func() {
-		g.showUserCreation()
-	})
+	createUserButton := button(
+		func() {
+			g.showUserCreation()
+		},
+		ButtonOptions{
+			Text: "Create New User",
+		},
+	)
 
 	content := container.NewPadded(
 		widget.NewCard(

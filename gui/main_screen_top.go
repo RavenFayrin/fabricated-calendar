@@ -42,31 +42,49 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 	calendarSelect.PlaceHolder = "Select Calendar"
 
 	// Create Calendar Button
-	createCalendarButton := widget.NewButtonWithIcon("Create New Calendar", theme.ContentAddIcon(), func() {
-		g.generateMainScreenMiddleDisplay(CreateCalendarForm)
-	})
+	createCalendarButton := button(
+		func() {
+			g.generateMainScreenMiddleDisplay(CreateCalendarForm)
+		},
+		ButtonOptions{
+			Text: "Create New Calendar",
+			Icon: theme.ContentAddIcon(),
+		},
+	)
 
 	// Edit Calendar Button
-	editCalendarButton := widget.NewButtonWithIcon("Edit Calendar", theme.DocumentCreateIcon(), func() {
-		g.generateMainScreenMiddleDisplay(EditCalendarForm)
-	})
+	editCalendarButton := button(
+		func() {
+			g.generateMainScreenMiddleDisplay(EditCalendarForm)
+		},
+		ButtonOptions{
+			Text: "Edit Calendar",
+			Icon: theme.DocumentCreateIcon(),
+		},
+	)
 
 	// Delete Calendar Button
-	deleteCalendarButton := widget.NewButtonWithIcon("Delete Calendar", theme.DeleteIcon(), func() {
-		err := g.checkCalendarSelected()
-		if err != nil {
-			g.showError("Calendar not selected.", err)
-			return
-		}
+	deleteCalendarButton := button(
+		func() {
+			err := g.checkCalendarSelected()
+			if err != nil {
+				g.showError("Calendar not selected.", err)
+				return
+			}
 
-		err = calendar.DeleteCalendar(g.Config, g.Calendar.ID)
-		if err != nil {
-			g.showError("Could not delete calendar.", err)
-		}
+			err = calendar.DeleteCalendar(g.Config, g.Calendar.ID)
+			if err != nil {
+				g.showError("Could not delete calendar.", err)
+			}
 
-		g.Calendar = &database.Calendar{}
-		g.showMainScreen()
-	})
+			g.Calendar = &database.Calendar{}
+			g.showMainScreen()
+		},
+		ButtonOptions{
+			Text: "Delete Calendar",
+			Icon: theme.DeleteIcon(),
+		},
+	)
 
 	calendarCard := widget.NewCard(
 		"",

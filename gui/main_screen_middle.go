@@ -42,25 +42,29 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 	}
 
 	// Pagination
-	backMonthButton := widget.NewButtonWithIcon(
-		"",
-		theme.NavigateBackIcon(),
+	backMonthButton := button(
 		func() {
 			err := g.previousMonth()
 			if err != nil {
 				g.showError("Unable to show previous month.", err)
 			}
-		})
+		},
+		ButtonOptions{
+			Icon: theme.NavigateBackIcon(),
+		},
+	)
 
-	nextMonthButton := widget.NewButtonWithIcon(
-		"",
-		theme.NavigateNextIcon(),
+	nextMonthButton := button(
 		func() {
 			err := g.nextMonth()
 			if err != nil {
 				g.showError("Unable to show next month.", err)
 			}
-		})
+		},
+		ButtonOptions{
+			Icon: theme.NavigateNextIcon(),
+		},
+	)
 
 	// Create Month/Year Selection
 	monthSelection := g.createMonthSelector()
@@ -117,9 +121,7 @@ func (g *GUI) createMonthSelector() *widget.Select {
 }
 
 func (g *GUI) createMonthYearSelectorButton(selectedMonth *widget.Select, selectedYear *xwidget.NumericalEntry) *widget.Button {
-	button := widget.NewButtonWithIcon(
-		"",
-		fyne.Resource(theme.ConfirmIcon()),
+	button := button(
 		func() {
 			for i, month := range g.CalendarData.Months {
 				if month.Name == selectedMonth.Selected {
@@ -148,7 +150,12 @@ func (g *GUI) createMonthYearSelectorButton(selectedMonth *widget.Select, select
 			g.DisplayYear = int32(year)
 
 			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-		})
+		},
+		ButtonOptions{
+			Icon: theme.ConfirmIcon(),
+		},
+	)
+
 	return button
 }
 
