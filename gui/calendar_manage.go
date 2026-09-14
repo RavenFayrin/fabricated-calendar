@@ -6,6 +6,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
 	"github.com/google/uuid"
 )
 
@@ -22,51 +23,39 @@ func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 		},
 	)
 
-	submitButton := button(
-		func() {
-			err := calendar.CreateCalendar(
-				g.Config,
-				calName.Text,
-				calDesc.Text,
-				g.User.ID,
-			)
-			if err != nil {
-				g.showError("Unable to create calendar.", err)
-				return
-			}
-
-			g.generateMainScreenTopDisplay(MainTopDisplay)
-			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-			g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		},
-		ButtonOptions{
-			Text: "Create Calendar",
-		},
+	form := widget.NewForm(
+		widget.NewFormItem("Calendar Name", calName),
+		widget.NewFormItem("Calendar Description", calDesc),
 	)
 
-	closeButton := button(
-		func() {
-			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-		},
-		ButtonOptions{
-			Text: "Close",
-		},
-	)
+	form.OnSubmit = func() {
+		err := calendar.CreateCalendar(
+			g.Config,
+			calName.Text,
+			calDesc.Text,
+			g.User.ID,
+		)
+		if err != nil {
+			g.showError("Unable to create calendar.", err)
+			return
+		}
+
+		g.generateMainScreenTopDisplay(MainTopDisplay)
+		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+		g.generateMainScreenLeftDisplay(MainLeftDisplay)
+	}
+
+	form.OnCancel = func() {
+		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+	}
 
 	content := container.NewPadded(
-		container.NewVBox(
-			textLabel(
-				"Create New Calendar",
-				LabelOptions{
-					Alignment: fyne.TextAlignCenter,
-					Bold:      true,
-				},
-			),
-			calName,
-			calDesc,
-			submitButton,
-			closeButton,
-		))
+		widget.NewCard(
+			"Create New Calendar",
+			"",
+			form,
+		),
+	)
 
 	return content
 }
