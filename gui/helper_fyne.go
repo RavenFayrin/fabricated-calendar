@@ -187,3 +187,35 @@ func card(content fyne.CanvasObject, options ...CardOptions) *widget.Card {
 
 	return card
 }
+
+type AccordionItemOptions struct {
+	Text    string
+	content fyne.CanvasObject
+}
+
+type AccordionOptions struct {
+	MultiOpen bool
+}
+
+func accordion(items []AccordionItemOptions, options ...AccordionOptions) *widget.Accordion {
+	opts := AccordionOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	accordionItems := make([]*widget.AccordionItem, 0, len(items))
+
+	for _, item := range items {
+		accordionItems = append(accordionItems, widget.NewAccordionItem(
+			item.Text,
+			item.content,
+		))
+	}
+
+	accordion := widget.NewAccordion(accordionItems...)
+
+	accordion.MultiOpen = opts.MultiOpen
+
+	return accordion
+}
