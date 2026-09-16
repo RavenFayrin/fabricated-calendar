@@ -6,7 +6,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 	"github.com/google/uuid"
 )
 
@@ -59,12 +58,11 @@ func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 		},
 	)
 
-	content := container.NewPadded(
-		widget.NewCard(
-			"Create New Calendar",
-			"",
-			form,
-		),
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: "Create New Calendar",
+		},
 	)
 
 	return content
