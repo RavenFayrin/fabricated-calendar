@@ -22,31 +22,40 @@ func (g *GUI) showLogin() {
 		},
 	)
 
-	form := widget.NewForm(
-		widget.NewFormItem("Username", username),
-		widget.NewFormItem("Password", password),
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Username",
+				Widget: username,
+			},
+			{
+				Label:  "Password",
+				Widget: password,
+			},
+		},
+		FormOptions{
+			SubmitText: "Login",
+			OnSubmit: func() {
+				user, err := auth.Login(
+					g.Config,
+					username.Text,
+					password.Text,
+				)
+				if err != nil {
+					g.showError(
+						"Unable to login. Please check username and password.",
+						err,
+					)
+					return
+				}
+
+				g.User = &user
+
+				g.Window.SetMainMenu(g.makeMenu())
+				g.showMainScreen()
+			},
+		},
 	)
-
-	form.OnSubmit = func() {
-		user, err := auth.Login(
-			g.Config,
-			username.Text,
-			password.Text,
-		)
-		if err != nil {
-			g.showError(
-				"Unable to login. Please check username and password.",
-				err,
-			)
-			return
-		}
-
-		g.User = &user
-
-		g.Window.SetMainMenu(g.makeMenu())
-		g.showMainScreen()
-	}
-	form.SubmitText = "Login"
 
 	createUserButton := button(
 		func() {
@@ -96,41 +105,43 @@ func (g *GUI) userCreationForm() *fyne.Container {
 		},
 	)
 
-	form := widget.NewForm(
-		widget.NewFormItem(
-			"Username",
-			username,
-		),
-		widget.NewFormItem(
-			"Password",
-			password,
-		),
-		widget.NewFormItem(
-			"Email",
-			email,
-		),
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Username",
+				Widget: username,
+			},
+			{
+				Label:  "Password",
+				Widget: password,
+			},
+			{
+				Label:  "Email",
+				Widget: email,
+			},
+		},
+		FormOptions{
+			SubmitText: "Create User",
+			OnSubmit: func() {
+				err := auth.CreateUser(
+					g.Config,
+					username.Text,
+					password.Text,
+					email.Text,
+				)
+				if err != nil {
+					g.showError("Unable to create user.", err)
+					return
+				}
+
+				g.showLogin()
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.showLogin()
+			},
+		},
 	)
-
-	form.OnSubmit = func() {
-		err := auth.CreateUser(
-			g.Config,
-			username.Text,
-			password.Text,
-			email.Text,
-		)
-		if err != nil {
-			g.showError("Unable to create user.", err)
-			return
-		}
-
-		g.showLogin()
-	}
-	form.SubmitText = "Create User"
-
-	form.OnCancel = func() {
-		g.showLogin()
-	}
-	form.CancelText = "Cancel"
 
 	content := container.NewPadded(
 		widget.NewCard(

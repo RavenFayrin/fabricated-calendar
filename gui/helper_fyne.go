@@ -46,9 +46,7 @@ type ButtonOptions struct {
 }
 
 func button(function func(), options ...ButtonOptions) *widget.Button {
-	opts := ButtonOptions{
-		Text: "",
-	}
+	opts := ButtonOptions{}
 
 	if len(options) > 0 {
 		opts = options[0]
@@ -124,4 +122,47 @@ func entryNumerical(options ...EntryOptions) *xwidget.NumericalEntry {
 	}
 
 	return entry
+}
+
+type FormItemOptions struct {
+	Label  string
+	Widget fyne.CanvasObject
+}
+
+type FormOptions struct {
+	SubmitText string
+	OnSubmit   func()
+	CancelText string
+	OnCancel   func()
+	Disabled   bool
+}
+
+func form(items []FormItemOptions, options ...FormOptions) *widget.Form {
+	opts := FormOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	formItems := make([]*widget.FormItem, 0, len(items))
+
+	for _, item := range items {
+		formItems = append(formItems, widget.NewFormItem(
+			item.Label,
+			item.Widget,
+		))
+	}
+
+	form := widget.NewForm(formItems...)
+
+	if opts.Disabled {
+		form.Disable()
+	}
+
+	form.SubmitText = opts.SubmitText
+	form.OnSubmit = opts.OnSubmit
+	form.CancelText = opts.CancelText
+	form.OnCancel = opts.OnCancel
+
+	return form
 }

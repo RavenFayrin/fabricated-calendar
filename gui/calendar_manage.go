@@ -23,31 +23,41 @@ func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 		},
 	)
 
-	form := widget.NewForm(
-		widget.NewFormItem("Calendar Name", calName),
-		widget.NewFormItem("Calendar Description", calDesc),
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Calendar Name",
+				Widget: calName,
+			},
+			{
+				Label:  "Calendar Description",
+				Widget: calDesc,
+			},
+		},
+		FormOptions{
+			SubmitText: "Create Calendar",
+			OnSubmit: func() {
+				err := calendar.CreateCalendar(
+					g.Config,
+					calName.Text,
+					calDesc.Text,
+					g.User.ID,
+				)
+				if err != nil {
+					g.showError("Unable to create calendar.", err)
+					return
+				}
+
+				g.generateMainScreenTopDisplay(MainTopDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+		},
 	)
-
-	form.OnSubmit = func() {
-		err := calendar.CreateCalendar(
-			g.Config,
-			calName.Text,
-			calDesc.Text,
-			g.User.ID,
-		)
-		if err != nil {
-			g.showError("Unable to create calendar.", err)
-			return
-		}
-
-		g.generateMainScreenTopDisplay(MainTopDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	}
-
-	form.OnCancel = func() {
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	}
 
 	content := container.NewPadded(
 		widget.NewCard(
