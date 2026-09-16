@@ -219,3 +219,28 @@ func accordion(items []AccordionItemOptions, options ...AccordionOptions) *widge
 
 	return accordion
 }
+
+type DropDownOptions struct {
+	PlaceHolder string
+	Alignment   fyne.TextAlign
+	Disabled    bool
+}
+
+func dropDown(items []string, onChange func(string), options ...DropDownOptions) *widget.Select {
+	opts := DropDownOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	dropDown := widget.NewSelect(items, onChange)
+
+	if opts.Disabled {
+		dropDown.Disable()
+	}
+
+	dropDown.PlaceHolder = opts.PlaceHolder
+	dropDown.Alignment = opts.Alignment
+
+	return dropDown
+}
