@@ -2,6 +2,7 @@ package gui
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	xwidget "fyne.io/x/fyne/widget"
 )
@@ -186,6 +187,11 @@ func card(content fyne.CanvasObject, options ...CardOptions) *widget.Card {
 	)
 
 	return card
+}
+
+func paddedCard(content fyne.CanvasObject, options ...CardOptions) *fyne.Container {
+	card := card(content, options...)
+	return container.NewPadded(card)
 }
 
 type AccordionItemOptions struct {
