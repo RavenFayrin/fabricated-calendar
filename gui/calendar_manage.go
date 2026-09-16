@@ -74,6 +74,7 @@ func (g *GUI) showEditCalendar(calID uuid.UUID) fyne.CanvasObject {
 	calDesc := entry(
 		EntryOptions{
 			PlaceHolder: "Change Calendar Description",
+			MultiLine:   true,
 		},
 	)
 
