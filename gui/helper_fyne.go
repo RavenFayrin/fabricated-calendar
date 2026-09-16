@@ -166,3 +166,24 @@ func form(items []FormItemOptions, options ...FormOptions) *widget.Form {
 
 	return form
 }
+
+type CardOptions struct {
+	Text         string
+	SubtitleText string
+}
+
+func card(content fyne.CanvasObject, options ...CardOptions) *widget.Card {
+	opts := CardOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	card := widget.NewCard(
+		opts.Text,
+		opts.SubtitleText,
+		content,
+	)
+
+	return card
+}
