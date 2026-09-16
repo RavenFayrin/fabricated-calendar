@@ -5,7 +5,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 	"github.com/google/uuid"
 )
 
@@ -18,7 +17,7 @@ const EditMonthForm = "edit month form"
 func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	err := g.checkCalendarSelected()
 	if err != nil {
-		return container.NewVBox()
+		return container.NewWithoutLayout()
 	}
 
 	// Create Calendar Parts Buttons
@@ -72,20 +71,23 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	)
 
 	// Calendar tools content
-	tools := container.NewPadded(
-		widget.NewCard(
-			"Calendar Tools",
-			"",
-			widget.NewAccordion(
-				widget.NewAccordionItem(
-					"Weekdays",
-					weekdayContent,
-				),
-				widget.NewAccordionItem(
-					"Months",
-					monthContent,
-				),
-			)))
+	tools := paddedCard(
+		accordion(
+			[]AccordionItemOptions{
+				{
+					Text:    "Weekdays",
+					content: weekdayContent,
+				},
+				{
+					Text:    "Months",
+					content: monthContent,
+				},
+			},
+			AccordionOptions{
+				MultiOpen: true,
+			},
+		),
+	)
 
 	// Make the tools scrollable.
 	scroll := container.NewVScroll(tools)
