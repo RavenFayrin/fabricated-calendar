@@ -3,22 +3,18 @@ package gui
 import (
 	"fabricated-calendar/internal/calendar"
 	"fabricated-calendar/internal/database"
+	"fmt"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
 	"github.com/google/uuid"
 )
 
 func (g *GUI) showCreateCalendar() fyne.CanvasObject {
-	calName := entry(
-		EntryOptions{
-			PlaceHolder: "Calendar Name",
-		},
-	)
+	calName := entry()
 
 	calDesc := entry(
 		EntryOptions{
-			PlaceHolder: "Calendar Description",
+			MultiLine: true,
 		},
 	)
 
@@ -71,62 +67,59 @@ func (g *GUI) showCreateCalendar() fyne.CanvasObject {
 func (g *GUI) showEditCalendar(calID uuid.UUID) fyne.CanvasObject {
 	calName := entry(
 		EntryOptions{
-			PlaceHolder: "Calendar Name",
+			PlaceHolder: "Change Calendar Name",
 		},
 	)
 
 	calDesc := entry(
 		EntryOptions{
-			PlaceHolder: "Calendar Description",
+			PlaceHolder: "Change Calendar Description",
 		},
 	)
 
-	submitButton := button(
-		func() {
-			err := calendar.UpdateCalendar(
-				g.Config,
-				calName.Text,
-				calDesc.Text,
-				calID,
-			)
-			if err != nil {
-				g.showError("Unable to edit calendar.", err)
-				return
-			}
-
-			g.Calendar = &database.Calendar{}
-			g.generateMainScreenTopDisplay(MainTopDisplay)
-			g.generateMainScreenLeftDisplay(MainLeftDisplay)
-			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Calendar Name",
+				Widget: calName,
+			},
+			{
+				Label:  "Calendar Description",
+				Widget: calDesc,
+			},
 		},
-		ButtonOptions{
-			Text: "Edit Calendar",
+		FormOptions{
+			SubmitText: "Update Calendar",
+			OnSubmit: func() {
+				err := calendar.UpdateCalendar(
+					g.Config,
+					calName.Text,
+					calDesc.Text,
+					calID,
+				)
+				if err != nil {
+					g.showError("Unable to update calendar.", err)
+					return
+				}
+
+				g.Calendar = &database.Calendar{}
+				g.generateMainScreenTopDisplay(MainTopDisplay)
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
 		},
 	)
 
-	closeButton := button(
-		func() {
-			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-		},
-		ButtonOptions{
-			Text: "Close",
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: fmt.Sprintf("Update %s", g.Calendar.Name),
 		},
 	)
-
-	content := container.NewPadded(
-		container.NewVBox(
-			textLabel(
-				"Edit Calendar",
-				LabelOptions{
-					Alignment: fyne.TextAlignCenter,
-					Bold:      true,
-				},
-			),
-			calName,
-			calDesc,
-			submitButton,
-			closeButton,
-		))
 
 	return content
 }
