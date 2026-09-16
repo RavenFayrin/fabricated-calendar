@@ -5,20 +5,14 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 )
 
 func (g *GUI) showLogin() {
-	username := entry(
-		EntryOptions{
-			PlaceHolder: "Enter Username",
-		},
-	)
+	username := entry()
 
 	password := entry(
 		EntryOptions{
-			PlaceHolder: "Enter Password",
-			Password:    true,
+			Password: true,
 		},
 	)
 
@@ -66,15 +60,15 @@ func (g *GUI) showLogin() {
 		},
 	)
 
-	content := container.NewPadded(
-		widget.NewCard(
-			"Fabricated Calendar Login",
-			"",
-			container.NewVBox(
-				form,
-				createUserButton,
-			),
-		))
+	content := paddedCard(
+		container.NewVBox(
+			form,
+			createUserButton,
+		),
+		CardOptions{
+			Text: "Fabricated Calendar Login",
+		},
+	)
 
 	g.Window.SetContent(content)
 }
@@ -86,16 +80,11 @@ func (g *GUI) showUserCreation() {
 }
 
 func (g *GUI) userCreationForm() *fyne.Container {
-	username := entry(
-		EntryOptions{
-			PlaceHolder: "Username",
-		},
-	)
+	username := entry()
 
 	password := entry(
 		EntryOptions{
-			PlaceHolder: "Password",
-			Password:    true,
+			Password: true,
 		},
 	)
 
@@ -143,12 +132,12 @@ func (g *GUI) userCreationForm() *fyne.Container {
 		},
 	)
 
-	content := container.NewPadded(
-		widget.NewCard(
-			"Create New User",
-			"",
-			form,
-		))
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: "Create New User",
+		},
+	)
 
 	return content
 }
