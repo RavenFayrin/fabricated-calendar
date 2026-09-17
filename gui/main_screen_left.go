@@ -5,7 +5,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 	"github.com/google/uuid"
 )
 
@@ -18,48 +17,39 @@ const EditMonthForm = "edit month form"
 func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	err := g.checkCalendarSelected()
 	if err != nil {
-		return container.NewVBox()
+		return container.NewWithoutLayout()
 	}
 
-	// Text
-	titleText := widget.NewLabelWithStyle(
-		"Calendar Tools",
-		fyne.TextAlignCenter,
-		fyne.TextStyle{Bold: true},
-	)
-
-	weekdaysText := widget.NewLabelWithStyle(
-		"Weekdays",
-		fyne.TextAlignCenter,
-		fyne.TextStyle{Bold: true},
-	)
-
-	monthsText := widget.NewLabelWithStyle(
-		"Months",
-		fyne.TextAlignCenter,
-		fyne.TextStyle{Bold: true},
-	)
-
 	// Create Calendar Parts Buttons
-	createWeekdayButton := widget.NewButton("+ Add Weekday", func() {
-		err := g.checkCalendarSelected()
-		if err != nil {
-			g.showError("Calendar not selected.", err)
-			return
-		}
+	createWeekdayButton := button(
+		func() {
+			err := g.checkCalendarSelected()
+			if err != nil {
+				g.showError("Calendar not selected.", err)
+				return
+			}
 
-		g.generateMainScreenLeftDisplay(CreateWeekdayForm)
-	})
+			g.generateMainScreenLeftDisplay(CreateWeekdayForm)
+		},
+		ButtonOptions{
+			Text: "+ Add Weekday",
+		},
+	)
 
-	createMonthButton := widget.NewButton("+ Add Month", func() {
-		err := g.checkCalendarSelected()
-		if err != nil {
-			g.showError("Calendar not selected.", err)
-			return
-		}
+	createMonthButton := button(
+		func() {
+			err := g.checkCalendarSelected()
+			if err != nil {
+				g.showError("Calendar not selected.", err)
+				return
+			}
 
-		g.generateMainScreenLeftDisplay(CreateMonthForm)
-	})
+			g.generateMainScreenLeftDisplay(CreateMonthForm)
+		},
+		ButtonOptions{
+			Text: "+ Add Month",
+		},
+	)
 
 	// Retrieve Calendar Parts
 	dbWeekdays := g.getWeekdays()
@@ -69,23 +59,38 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	weekdayLabels := g.createWeekdayLables(dbWeekdays)
 	monthLabels := g.createMonthLables(dbMonths)
 
-	// Calendar tools content
-	tools := container.NewVBox(
-		titleText,
-		weekdaysText,
+	// Content
+	weekdayContent := container.NewVBox(
 		weekdayLabels,
 		createWeekdayButton,
-		monthsText,
+	)
+
+	monthContent := container.NewVBox(
 		monthLabels,
 		createMonthButton,
 	)
 
-	// Add padding between the content and the left side
-	// of the window.
-	padded := container.NewPadded(tools)
+	// Calendar tools content
+	tools := paddedCard(
+		accordion(
+			[]AccordionItemOptions{
+				{
+					Text:    "Weekdays",
+					content: weekdayContent,
+				},
+				{
+					Text:    "Months",
+					content: monthContent,
+				},
+			},
+			AccordionOptions{
+				MultiOpen: true,
+			},
+		),
+	)
 
 	// Make the tools scrollable.
-	scroll := container.NewVScroll(padded)
+	scroll := container.NewVScroll(tools)
 
 	return scroll
 }

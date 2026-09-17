@@ -8,107 +8,134 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
 	"github.com/google/uuid"
-
-	xwidget "fyne.io/x/fyne/widget"
 )
 
 func (g *GUI) showCreateWeekday() fyne.CanvasObject {
-	weekdayName := widget.NewEntry()
-	weekdayName.SetPlaceHolder("Weekday Name")
+	weekdayName := entry(
+		EntryOptions{
+			PlaceHolder: "Sunday",
+		},
+	)
 
-	weekdayOrder := xwidget.NewNumericalEntry()
-	weekdayOrder.SetPlaceHolder("Weekday Order")
+	weekdayOrder := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "1",
+		},
+	)
 
-	submitButton := widget.NewButton("Create Weekday", func() {
-		err := calendar.CreateWeekday(
-			g.Config,
-			weekdayName.Text,
-			weekdayOrder.Text,
-			g.Calendar.ID,
-			g.User.ID,
-		)
-		if err != nil {
-			g.showError("Unable to create weekday.", err)
-			return
-		}
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Weekday Name",
+				Widget: weekdayName,
+			},
+			{
+				Label:  "Weekday Order",
+				Widget: weekdayOrder,
+			},
+		},
+		FormOptions{
+			SubmitText: "Create Weekday",
+			OnSubmit: func() {
+				err := calendar.CreateWeekday(
+					g.Config,
+					weekdayName.Text,
+					weekdayOrder.Text,
+					g.Calendar.ID,
+					g.User.ID,
+				)
+				if err != nil {
+					g.showError("Unable to create weekday.", err)
+					return
+				}
 
-		err = g.fetchCalendarData()
-		if err != nil {
-			g.showError("Unable to update calendar.", err)
-			return
-		}
+				err = g.fetchCalendarData()
+				if err != nil {
+					g.showError("Unable to update calendar.", err)
+					return
+				}
 
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			},
+		},
+	)
 
-	closeButton := widget.NewButton("Close", func() {
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	})
-
-	content := container.NewPadded(
-		container.NewVBox(
-			widget.NewLabelWithStyle(
-				"Create New Weekday",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			weekdayName,
-			weekdayOrder,
-			submitButton,
-			closeButton,
-		))
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: "Create New Weekday",
+		},
+	)
 
 	return content
 }
 
 func (g *GUI) showEditWeekday(weekdayID uuid.UUID) fyne.CanvasObject {
-	weekdayName := widget.NewEntry()
-	weekdayName.SetPlaceHolder("Weekday Name")
+	weekdayName := entry(
+		EntryOptions{
+			PlaceHolder: "Monday",
+		},
+	)
 
-	weekdayOrder := xwidget.NewNumericalEntry()
-	weekdayOrder.SetPlaceHolder("Weekday Order")
+	weekdayOrder := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "2",
+		},
+	)
 
-	submitButton := widget.NewButton("Update Weekday", func() {
-		err := calendar.UpdateWeekday(
-			g.Config,
-			weekdayName.Text,
-			weekdayOrder.Text,
-			weekdayID,
-		)
-		if err != nil {
-			g.showError("Unable to update weekday.", err)
-			return
-		}
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Weekday Name",
+				Widget: weekdayName,
+			},
+			{
+				Label:  "Weekday Order",
+				Widget: weekdayOrder,
+			},
+		},
+		FormOptions{
+			SubmitText: "Update Weekday",
+			OnSubmit: func() {
+				err := calendar.UpdateWeekday(
+					g.Config,
+					weekdayName.Text,
+					weekdayOrder.Text,
+					weekdayID,
+				)
+				if err != nil {
+					g.showError("Unable to update weekday.", err)
+					return
+				}
 
-		err = g.fetchCalendarData()
-		if err != nil {
-			g.showError("Unable to update weekday.", err)
-			return
-		}
+				err = g.fetchCalendarData()
+				if err != nil {
+					g.showError("Unable to update weekday.", err)
+					return
+				}
 
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			},
+		},
+	)
 
-	closeButton := widget.NewButton("Close", func() {
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	})
-
-	content := container.NewPadded(
-		container.NewVBox(
-			widget.NewLabelWithStyle(
-				"Update Weekday",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			weekdayName,
-			weekdayOrder,
-			submitButton,
-			closeButton,
-		))
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: "Update Weekday",
+		},
+	)
 
 	return content
 }
@@ -117,19 +144,18 @@ func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject
 	vbox := container.NewVBox()
 
 	for _, dbWeekday := range weekdays {
-		weekdayLabel := widget.NewLabel(dbWeekday.Name)
+		weekdayLabel := textLabel(dbWeekday.Name)
 
-		editButton := widget.NewButtonWithIcon(
-			"",
-			theme.DocumentCreateIcon(),
+		editButton := button(
 			func() {
 				g.generateMainScreenLeftDisplay(EditWeekdayForm, dbWeekday.ID)
 			},
+			ButtonOptions{
+				Icon: theme.DocumentCreateIcon(),
+			},
 		)
 
-		deleteButton := widget.NewButtonWithIcon(
-			"",
-			theme.DeleteIcon(),
+		deleteButton := button(
 			func() {
 				err := calendar.DeleteWeekday(g.Config, dbWeekday.ID)
 				if err != nil {
@@ -144,6 +170,9 @@ func (g *GUI) createWeekdayLables(weekdays []database.Weekday) fyne.CanvasObject
 
 				g.generateMainScreenLeftDisplay(MainLeftDisplay)
 				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			ButtonOptions{
+				Icon: theme.DeleteIcon(),
 			},
 		)
 

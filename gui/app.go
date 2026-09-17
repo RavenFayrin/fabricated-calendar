@@ -37,6 +37,9 @@ func Start(app fyne.App, cfg config.Config) {
 		Config: cfg,
 	}
 
+	window.SetMainMenu(gui.makeMenu())
+	window.SetMaster()
+
 	gui.showLogin()
 
 	gui.Window.ShowAndRun()

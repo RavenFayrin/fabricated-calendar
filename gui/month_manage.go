@@ -8,117 +8,156 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
 	"github.com/google/uuid"
-
-	xwidget "fyne.io/x/fyne/widget"
 )
 
 func (g *GUI) showCreateMonth() fyne.CanvasObject {
-	monthName := widget.NewEntry()
-	monthName.SetPlaceHolder("Month Name")
+	monthName := entry(
+		EntryOptions{
+			PlaceHolder: "January",
+		},
+	)
 
-	monthOrder := xwidget.NewNumericalEntry()
-	monthOrder.SetPlaceHolder("Month Order")
+	monthOrder := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "1",
+		},
+	)
 
-	monthLength := xwidget.NewNumericalEntry()
-	monthLength.SetPlaceHolder("Month Length")
+	monthLength := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "31",
+		},
+	)
 
-	submitButton := widget.NewButton("Create Month", func() {
-		err := calendar.CreateMonth(
-			g.Config,
-			monthName.Text,
-			monthOrder.Text,
-			monthLength.Text,
-			g.Calendar.ID,
-			g.User.ID,
-		)
-		if err != nil {
-			g.showError("Unable to create month.", err)
-			return
-		}
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Month Name",
+				Widget: monthName,
+			},
+			{
+				Label:  "Month Order",
+				Widget: monthOrder,
+			},
+			{
+				Label:  "Month Length",
+				Widget: monthLength,
+			},
+		},
+		FormOptions{
+			SubmitText: "Create Month",
+			OnSubmit: func() {
+				err := calendar.CreateMonth(
+					g.Config,
+					monthName.Text,
+					monthOrder.Text,
+					monthLength.Text,
+					g.Calendar.ID,
+					g.User.ID,
+				)
+				if err != nil {
+					g.showError("Unable to create month.", err)
+					return
+				}
 
-		err = g.fetchCalendarData()
-		if err != nil {
-			g.showError("Unable to update calendar.", err)
-			return
-		}
+				err = g.fetchCalendarData()
+				if err != nil {
+					g.showError("Unable to update calendar.", err)
+					return
+				}
 
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			},
+		},
+	)
 
-	closeButton := widget.NewButton("Close", func() {
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	})
-
-	content := container.NewPadded(
-		container.NewVBox(
-			widget.NewLabelWithStyle(
-				"Create New Month",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			monthName,
-			monthOrder,
-			monthLength,
-			submitButton,
-			closeButton,
-		))
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: "Create New Month",
+		},
+	)
 
 	return content
 }
 
 func (g *GUI) showEditMonth(monthID uuid.UUID) fyne.CanvasObject {
-	monthName := widget.NewEntry()
-	monthName.SetPlaceHolder("Month Name")
+	monthName := entry(
+		EntryOptions{
+			PlaceHolder: "Febuary",
+		},
+	)
 
-	monthOrder := xwidget.NewNumericalEntry()
-	monthOrder.SetPlaceHolder("Month Order")
+	monthOrder := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "2",
+		},
+	)
 
-	monthLength := xwidget.NewNumericalEntry()
-	monthLength.SetPlaceHolder("Month Length")
+	monthLength := entryNumerical(
+		EntryOptions{
+			PlaceHolder: "28",
+		},
+	)
 
-	submitButton := widget.NewButton("Update Month", func() {
-		err := calendar.UpdateMonth(
-			g.Config,
-			monthName.Text,
-			monthOrder.Text,
-			monthLength.Text,
-			monthID,
-		)
-		if err != nil {
-			g.showError("Unable to update month.", err)
-			return
-		}
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Month Name",
+				Widget: monthName,
+			},
+			{
+				Label:  "Month Order",
+				Widget: monthOrder,
+			},
+			{
+				Label:  "Month Length",
+				Widget: monthLength,
+			},
+		},
+		FormOptions{
+			SubmitText: "Update Month",
+			OnSubmit: func() {
+				err := calendar.UpdateMonth(
+					g.Config,
+					monthName.Text,
+					monthOrder.Text,
+					monthLength.Text,
+					monthID,
+				)
+				if err != nil {
+					g.showError("Unable to update month.", err)
+					return
+				}
 
-		err = g.fetchCalendarData()
-		if err != nil {
-			g.showError("Unable to update month.", err)
-			return
-		}
+				err = g.fetchCalendarData()
+				if err != nil {
+					g.showError("Unable to update month.", err)
+					return
+				}
 
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			},
+		},
+	)
 
-	closeButton := widget.NewButton("Close", func() {
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	})
-
-	content := container.NewPadded(
-		container.NewVBox(
-			widget.NewLabelWithStyle(
-				"Update Month",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			monthName,
-			monthOrder,
-			monthLength,
-			submitButton,
-			closeButton,
-		))
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: "Update Month",
+		},
+	)
 
 	return content
 }
@@ -127,19 +166,18 @@ func (g *GUI) createMonthLables(months []database.Month) fyne.CanvasObject {
 	vbox := container.NewVBox()
 
 	for _, dbMonth := range months {
-		monthLabel := widget.NewLabel(dbMonth.Name)
+		monthLabel := textLabel(dbMonth.Name)
 
-		editButton := widget.NewButtonWithIcon(
-			"",
-			theme.DocumentCreateIcon(),
+		editButton := button(
 			func() {
 				g.generateMainScreenLeftDisplay(EditMonthForm, dbMonth.ID)
 			},
+			ButtonOptions{
+				Icon: theme.DocumentCreateIcon(),
+			},
 		)
 
-		deleteButton := widget.NewButtonWithIcon(
-			"",
-			theme.DeleteIcon(),
+		deleteButton := button(
 			func() {
 				err := calendar.DeleteMonth(g.Config, dbMonth.ID)
 				if err != nil {
@@ -152,6 +190,9 @@ func (g *GUI) createMonthLables(months []database.Month) fyne.CanvasObject {
 				}
 				g.generateMainScreenLeftDisplay(MainLeftDisplay)
 				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			ButtonOptions{
+				Icon: theme.DeleteIcon(),
 			},
 		)
 

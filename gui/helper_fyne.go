@@ -1,0 +1,252 @@
+package gui
+
+import (
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
+	xwidget "fyne.io/x/fyne/widget"
+)
+
+type LabelOptions struct {
+	Alignment     fyne.TextAlign
+	Bold          bool
+	Italic        bool
+	Monospace     bool
+	Underline     bool
+	Strikethrough bool
+}
+
+func textLabel(text string, options ...LabelOptions) *widget.Label {
+	opts := LabelOptions{
+		Alignment: fyne.TextAlignLeading,
+	}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	return widget.NewLabelWithStyle(
+		text,
+		opts.Alignment,
+		fyne.TextStyle{
+			Bold:          opts.Bold,
+			Italic:        opts.Italic,
+			Monospace:     opts.Monospace,
+			Underline:     opts.Underline,
+			Strikethrough: opts.Strikethrough,
+		},
+	)
+}
+
+type ButtonOptions struct {
+	Text          string
+	Icon          fyne.Resource
+	Alignment     widget.ButtonAlign
+	Disabled      bool
+	IconAlignment widget.ButtonIconPlacement
+}
+
+func button(function func(), options ...ButtonOptions) *widget.Button {
+	opts := ButtonOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	var button *widget.Button
+
+	if opts.Icon != nil {
+		button = widget.NewButtonWithIcon(opts.Text, opts.Icon, function)
+	} else {
+		button = widget.NewButton(opts.Text, function)
+	}
+
+	button.Alignment = opts.Alignment
+	button.IconPlacement = opts.IconAlignment
+
+	if opts.Disabled {
+		button.Disable()
+	}
+
+	return button
+}
+
+type EntryOptions struct {
+	PlaceHolder string
+	MultiLine   bool
+	Password    bool
+	Disabled    bool
+	OnSubmit    func(string)
+}
+
+func entry(options ...EntryOptions) *widget.Entry {
+	opts := EntryOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	var entry *widget.Entry
+
+	if opts.MultiLine {
+		entry = widget.NewMultiLineEntry()
+	} else if opts.Password {
+		entry = widget.NewPasswordEntry()
+	} else {
+		entry = widget.NewEntry()
+	}
+
+	entry.SetPlaceHolder(opts.PlaceHolder)
+
+	if opts.Disabled {
+		entry.Disable()
+	}
+
+	entry.OnSubmitted = opts.OnSubmit
+
+	return entry
+}
+
+func entryNumerical(options ...EntryOptions) *xwidget.NumericalEntry {
+	opts := EntryOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	entry := xwidget.NewNumericalEntry()
+
+	entry.SetPlaceHolder(opts.PlaceHolder)
+
+	if opts.Disabled {
+		entry.Disable()
+	}
+
+	return entry
+}
+
+type FormItemOptions struct {
+	Label  string
+	Widget fyne.CanvasObject
+}
+
+type FormOptions struct {
+	SubmitText string
+	OnSubmit   func()
+	CancelText string
+	OnCancel   func()
+	Disabled   bool
+}
+
+func form(items []FormItemOptions, options ...FormOptions) *widget.Form {
+	opts := FormOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	formItems := make([]*widget.FormItem, 0, len(items))
+
+	for _, item := range items {
+		formItems = append(formItems, widget.NewFormItem(
+			item.Label,
+			item.Widget,
+		))
+	}
+
+	form := widget.NewForm(formItems...)
+
+	if opts.Disabled {
+		form.Disable()
+	}
+
+	form.SubmitText = opts.SubmitText
+	form.OnSubmit = opts.OnSubmit
+	form.CancelText = opts.CancelText
+	form.OnCancel = opts.OnCancel
+
+	return form
+}
+
+type CardOptions struct {
+	Text         string
+	SubtitleText string
+}
+
+func card(content fyne.CanvasObject, options ...CardOptions) *widget.Card {
+	opts := CardOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	card := widget.NewCard(
+		opts.Text,
+		opts.SubtitleText,
+		content,
+	)
+
+	return card
+}
+
+func paddedCard(content fyne.CanvasObject, options ...CardOptions) *fyne.Container {
+	card := card(content, options...)
+	return container.NewPadded(card)
+}
+
+type AccordionItemOptions struct {
+	Text    string
+	content fyne.CanvasObject
+}
+
+type AccordionOptions struct {
+	MultiOpen bool
+}
+
+func accordion(items []AccordionItemOptions, options ...AccordionOptions) *widget.Accordion {
+	opts := AccordionOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	accordionItems := make([]*widget.AccordionItem, 0, len(items))
+
+	for _, item := range items {
+		accordionItems = append(accordionItems, widget.NewAccordionItem(
+			item.Text,
+			item.content,
+		))
+	}
+
+	accordion := widget.NewAccordion(accordionItems...)
+
+	accordion.MultiOpen = opts.MultiOpen
+
+	return accordion
+}
+
+type DropDownOptions struct {
+	PlaceHolder string
+	Alignment   fyne.TextAlign
+	Disabled    bool
+}
+
+func dropDown(items []string, onChange func(string), options ...DropDownOptions) *widget.Select {
+	opts := DropDownOptions{}
+
+	if len(options) > 0 {
+		opts = options[0]
+	}
+
+	dropDown := widget.NewSelect(items, onChange)
+
+	if opts.Disabled {
+		dropDown.Disable()
+	}
+
+	dropDown.PlaceHolder = opts.PlaceHolder
+	dropDown.Alignment = opts.Alignment
+
+	return dropDown
+}

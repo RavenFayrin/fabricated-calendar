@@ -28,13 +28,7 @@ func (c *CalendarCell) CreateRenderer() fyne.WidgetRenderer {
 		theme.Color(theme.ColorNameInputBackground),
 	)
 
-	dayLabel := widget.NewLabelWithStyle(
-		c.Day,
-		fyne.TextAlignLeading,
-		fyne.TextStyle{
-			Bold: false,
-		},
-	)
+	dayLabel := textLabel(c.Day)
 
 	content := container.NewPadded(dayLabel)
 

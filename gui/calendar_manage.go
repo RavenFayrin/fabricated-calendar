@@ -3,98 +3,124 @@ package gui
 import (
 	"fabricated-calendar/internal/calendar"
 	"fabricated-calendar/internal/database"
+	"fmt"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 	"github.com/google/uuid"
 )
 
 func (g *GUI) showCreateCalendar() fyne.CanvasObject {
-	calName := widget.NewEntry()
-	calName.SetPlaceHolder("Calendar Name")
+	calName := entry()
 
-	calDesc := widget.NewEntry()
-	calDesc.SetPlaceHolder("Calendar Description")
+	calDesc := entry(
+		EntryOptions{
+			MultiLine: true,
+		},
+	)
 
-	submitButton := widget.NewButton("Create Calendar", func() {
-		err := calendar.CreateCalendar(
-			g.Config,
-			calName.Text,
-			calDesc.Text,
-			g.User.ID,
-		)
-		if err != nil {
-			g.showError("Unable to create calendar.", err)
-			return
-		}
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Calendar Name",
+				Widget: calName,
+			},
+			{
+				Label:  "Calendar Description",
+				Widget: calDesc,
+			},
+		},
+		FormOptions{
+			SubmitText: "Create Calendar",
+			OnSubmit: func() {
+				err := calendar.CreateCalendar(
+					g.Config,
+					calName.Text,
+					calDesc.Text,
+					g.User.ID,
+				)
+				if err != nil {
+					g.showError("Unable to create calendar.", err)
+					return
+				}
 
-		g.generateMainScreenTopDisplay(MainTopDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	})
+				g.generateMainScreenTopDisplay(MainTopDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+		},
+	)
 
-	closeButton := widget.NewButton("Close", func() {
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
-
-	content := container.NewPadded(
-		container.NewVBox(
-			widget.NewLabelWithStyle(
-				"Create New Calendar",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			calName,
-			calDesc,
-			submitButton,
-			closeButton,
-		))
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: "Create New Calendar",
+		},
+	)
 
 	return content
 }
 
 func (g *GUI) showEditCalendar(calID uuid.UUID) fyne.CanvasObject {
-	calName := widget.NewEntry()
-	calName.SetPlaceHolder("Calendar Name")
+	calName := entry(
+		EntryOptions{
+			PlaceHolder: "Change Calendar Name",
+		},
+	)
 
-	calDesc := widget.NewEntry()
-	calDesc.SetPlaceHolder("Calendar Description")
+	calDesc := entry(
+		EntryOptions{
+			PlaceHolder: "Change Calendar Description",
+			MultiLine:   true,
+		},
+	)
 
-	submitButton := widget.NewButton("Edit Calendar", func() {
-		err := calendar.UpdateCalendar(
-			g.Config,
-			calName.Text,
-			calDesc.Text,
-			calID,
-		)
-		if err != nil {
-			g.showError("Unable to edit calendar.", err)
-			return
-		}
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Calendar Name",
+				Widget: calName,
+			},
+			{
+				Label:  "Calendar Description",
+				Widget: calDesc,
+			},
+		},
+		FormOptions{
+			SubmitText: "Update Calendar",
+			OnSubmit: func() {
+				err := calendar.UpdateCalendar(
+					g.Config,
+					calName.Text,
+					calDesc.Text,
+					calID,
+				)
+				if err != nil {
+					g.showError("Unable to update calendar.", err)
+					return
+				}
 
-		g.Calendar = &database.Calendar{}
-		g.generateMainScreenTopDisplay(MainTopDisplay)
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
+				g.Calendar = &database.Calendar{}
+				g.generateMainScreenTopDisplay(MainTopDisplay)
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+		},
+	)
 
-	closeButton := widget.NewButton("Close", func() {
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-	})
-
-	content := container.NewPadded(
-		container.NewVBox(
-			widget.NewLabelWithStyle(
-				"Edit Calendar",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			calName,
-			calDesc,
-			submitButton,
-			closeButton,
-		))
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: fmt.Sprintf("Update %s", g.Calendar.Name),
+		},
+	)
 
 	return content
 }

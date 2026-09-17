@@ -1,14 +1,12 @@
 package gui
 
 import (
-	"fabricated-calendar/internal/auth"
 	"fabricated-calendar/internal/calendar"
 	"fabricated-calendar/internal/database"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/widget"
+	"fyne.io/fyne/v2/theme"
 )
 
 const MainTopDisplay = "main top"
@@ -22,86 +20,86 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 		calendarNames = append(calendarNames, dbCalendars[i].Name)
 	}
 
-	// Calendar Select
-	calendarSelect := widget.NewSelect(calendarNames, func(value string) {
-		for i := range dbCalendars {
-			if dbCalendars[i].Name == value {
-				g.Calendar = &dbCalendars[i]
-				err := g.fetchCalendarData()
-				if err != nil {
-					g.showError("Unable to select calendar.", err)
+	// Create Widget
+	calendarSelect := dropDown(
+		calendarNames,
+		func(value string) {
+			for i := range dbCalendars {
+				if dbCalendars[i].Name == value {
+					g.Calendar = &dbCalendars[i]
+					err := g.fetchCalendarData()
+					if err != nil {
+						g.showError("Unable to select calendar.", err)
+					}
+					g.DisplayMonthIndex = 0
+					g.DisplayYear = 0
+					break
 				}
-				g.DisplayMonthIndex = 0
-				g.DisplayYear = 0
-				break
 			}
-		}
 
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	})
+			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			g.generateMainScreenLeftDisplay(MainLeftDisplay)
+		},
+		DropDownOptions{
+			PlaceHolder: "Select Calendar",
+		},
+	)
 
-	// Create Calendar Button
-	createCalendarButton := widget.NewButton("Create New Calendar", func() {
-		g.generateMainScreenMiddleDisplay(CreateCalendarForm)
-	})
+	createCalendarButton := button(
+		func() {
+			g.generateMainScreenMiddleDisplay(CreateCalendarForm)
+		},
+		ButtonOptions{
+			Text: "Create New Calendar",
+			Icon: theme.ContentAddIcon(),
+		},
+	)
 
-	// Edit Calendar Button
-	editCalendarButton := widget.NewButton("Edit Calendar", func() {
-		g.generateMainScreenMiddleDisplay(EditCalendarForm)
-	})
+	editCalendarButton := button(
+		func() {
+			g.generateMainScreenMiddleDisplay(EditCalendarForm)
+		},
+		ButtonOptions{
+			Text: "Edit Calendar",
+			Icon: theme.DocumentCreateIcon(),
+		},
+	)
 
-	// Delete Calendar Button
-	deleteCalendarButton := widget.NewButton("Delete Calendar", func() {
-		err := g.checkCalendarSelected()
-		if err != nil {
-			g.showError("Calendar not selected.", err)
-			return
-		}
+	deleteCalendarButton := button(
+		func() {
+			err := g.checkCalendarSelected()
+			if err != nil {
+				g.showError("Calendar not selected.", err)
+				return
+			}
 
-		err = calendar.DeleteCalendar(g.Config, g.Calendar.ID)
-		if err != nil {
-			g.showError("Could not delete calendar.", err)
-		}
+			err = calendar.DeleteCalendar(g.Config, g.Calendar.ID)
+			if err != nil {
+				g.showError("Could not delete calendar.", err)
+			}
 
-		g.Calendar = &database.Calendar{}
-		g.showMainScreen()
-	})
+			g.Calendar = &database.Calendar{}
+			g.showMainScreen()
+		},
+		ButtonOptions{
+			Text: "Delete Calendar",
+			Icon: theme.DeleteIcon(),
+		},
+	)
 
-	// Logout Button
-	logoutButton := widget.NewButton("Log Out", func() {
-		g.User = &database.User{}
-		g.Calendar = &database.Calendar{}
-		g.showLogin()
-	})
+	calendarPallet := []fyne.CanvasObject{
+		calendarSelect,
+		editCalendarButton,
+		deleteCalendarButton,
+		createCalendarButton,
+	}
 
-	// Delete User Button
-	deleteUserButton := widget.NewButton("DELETE USER", func() {
-		err := auth.DeleteUser(g.Config, g.User.ID)
-		if err != nil {
-			g.showError("Could not delete user.", err)
-		}
-		g.User = &database.User{}
-		g.Calendar = &database.Calendar{}
-		g.showLogin()
-	})
-
-	// Content Creator
-	content := container.NewPadded(
-		container.NewHBox(
-			widget.NewLabelWithStyle(
-				"Calendar: ",
-				fyne.TextAlignCenter,
-				fyne.TextStyle{Bold: true},
-			),
-			calendarSelect,
-			createCalendarButton,
-			editCalendarButton,
-			deleteCalendarButton,
-			layout.NewSpacer(),
-			deleteUserButton,
-			logoutButton,
-		))
+	content := paddedCard(
+		container.NewGridWithColumns(
+			len(calendarPallet),
+			calendarPallet...,
+		),
+	)
 
 	return content
 }
