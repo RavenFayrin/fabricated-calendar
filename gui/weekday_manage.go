@@ -14,67 +14,64 @@ import (
 func (g *GUI) showCreateWeekday() fyne.CanvasObject {
 	weekdayName := entry(
 		EntryOptions{
-			PlaceHolder: "Weekday Name",
+			PlaceHolder: "Sunday",
 		},
 	)
 
 	weekdayOrder := entryNumerical(
 		EntryOptions{
-			PlaceHolder: "Weekday Order",
+			PlaceHolder: "1",
 		},
 	)
 
-	submitButton := button(
-		func() {
-			err := calendar.CreateWeekday(
-				g.Config,
-				weekdayName.Text,
-				weekdayOrder.Text,
-				g.Calendar.ID,
-				g.User.ID,
-			)
-			if err != nil {
-				g.showError("Unable to create weekday.", err)
-				return
-			}
-
-			err = g.fetchCalendarData()
-			if err != nil {
-				g.showError("Unable to update calendar.", err)
-				return
-			}
-
-			g.generateMainScreenLeftDisplay(MainLeftDisplay)
-			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Weekday Name",
+				Widget: weekdayName,
+			},
+			{
+				Label:  "Weekday Order",
+				Widget: weekdayOrder,
+			},
 		},
-		ButtonOptions{
-			Text: "Create Weekday",
+		FormOptions{
+			SubmitText: "Create Weekday",
+			OnSubmit: func() {
+				err := calendar.CreateWeekday(
+					g.Config,
+					weekdayName.Text,
+					weekdayOrder.Text,
+					g.Calendar.ID,
+					g.User.ID,
+				)
+				if err != nil {
+					g.showError("Unable to create weekday.", err)
+					return
+				}
+
+				err = g.fetchCalendarData()
+				if err != nil {
+					g.showError("Unable to update calendar.", err)
+					return
+				}
+
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			},
 		},
 	)
 
-	closeButton := button(
-		func() {
-			g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		},
-		ButtonOptions{
-			Text: "Close",
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: "Create New Weekday",
 		},
 	)
-
-	content := container.NewPadded(
-		container.NewVBox(
-			textLabel(
-				"Create New Weekday",
-				LabelOptions{
-					Alignment: fyne.TextAlignCenter,
-					Bold:      true,
-				},
-			),
-			weekdayName,
-			weekdayOrder,
-			submitButton,
-			closeButton,
-		))
 
 	return content
 }
@@ -92,56 +89,53 @@ func (g *GUI) showEditWeekday(weekdayID uuid.UUID) fyne.CanvasObject {
 		},
 	)
 
-	submitButton := button(
-		func() {
-			err := calendar.UpdateWeekday(
-				g.Config,
-				weekdayName.Text,
-				weekdayOrder.Text,
-				weekdayID,
-			)
-			if err != nil {
-				g.showError("Unable to update weekday.", err)
-				return
-			}
-
-			err = g.fetchCalendarData()
-			if err != nil {
-				g.showError("Unable to update weekday.", err)
-				return
-			}
-
-			g.generateMainScreenLeftDisplay(MainLeftDisplay)
-			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Monday",
+				Widget: weekdayName,
+			},
+			{
+				Label:  "2",
+				Widget: weekdayOrder,
+			},
 		},
-		ButtonOptions{
+		FormOptions{
+			SubmitText: "Update Weekday",
+			OnSubmit: func() {
+				err := calendar.UpdateWeekday(
+					g.Config,
+					weekdayName.Text,
+					weekdayOrder.Text,
+					weekdayID,
+				)
+				if err != nil {
+					g.showError("Unable to update weekday.", err)
+					return
+				}
+
+				err = g.fetchCalendarData()
+				if err != nil {
+					g.showError("Unable to update weekday.", err)
+					return
+				}
+
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			},
+		},
+	)
+
+	content := paddedCard(
+		form,
+		CardOptions{
 			Text: "Update Weekday",
 		},
 	)
-
-	closeButton := button(
-		func() {
-			g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		},
-		ButtonOptions{
-			Text: "Close",
-		},
-	)
-
-	content := container.NewPadded(
-		container.NewVBox(
-			textLabel(
-				"Update Weekday",
-				LabelOptions{
-					Alignment: fyne.TextAlignCenter,
-					Bold:      true,
-				},
-			),
-			weekdayName,
-			weekdayOrder,
-			submitButton,
-			closeButton,
-		))
 
 	return content
 }
