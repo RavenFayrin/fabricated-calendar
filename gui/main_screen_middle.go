@@ -22,22 +22,24 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 	// Error checker
 	err := g.checkCalendarSelected()
 	if err != nil {
-		content := container.NewPadded(
-			widget.NewCard(
-				"No Calendar Selected",
-				"Select a calendar above to begin.",
-				nil,
-			))
+		content := paddedCard(
+			nil,
+			CardOptions{
+				Text:         "No Calendar Selected",
+				SubtitleText: "Select a calendar above to begin.",
+			},
+		)
 		return content
 	}
 	err = g.checkCalendarData()
 	if err != nil {
-		content := container.NewPadded(
-			widget.NewCard(
-				"No Months or Weekdays Created",
-				"Create months and/or weekdays to begin.",
-				nil,
-			))
+		content := paddedCard(
+			nil,
+			CardOptions{
+				Text:         "No Months or Weekdays Created",
+				SubtitleText: "Create months and/or weekdays to begin.",
+			},
+		)
 		return content
 	}
 
@@ -90,26 +92,32 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 		},
 	)
 
-	content := container.NewPadded(
-		widget.NewCard(
-			g.Calendar.Name,
-			g.Calendar.Description.String,
-			container.NewPadded(
-				container.NewVBox(
-					container.NewGridWithColumns(
-						7,
-						monthSelection,
-						yearEntry,
-						submitDateChangeButton,
-						canvas.NewRectangle(color.Transparent),
-						backMonthButton,
-						monthYearLabel,
-						nextMonthButton,
-					),
-					weekdayGrid,
-					monthGrid,
+	commandPallet := []fyne.CanvasObject{
+		monthSelection,
+		yearEntry,
+		submitDateChangeButton,
+		canvas.NewRectangle(color.Transparent),
+		backMonthButton,
+		monthYearLabel,
+		nextMonthButton,
+	}
+
+	content := paddedCard(
+		container.NewPadded(
+			container.NewVBox(
+				container.NewGridWithColumns(
+					len(commandPallet),
+					commandPallet...,
 				),
-			)))
+				weekdayGrid,
+				monthGrid,
+			),
+		),
+		CardOptions{
+			Text:         g.Calendar.Name,
+			SubtitleText: g.Calendar.Description.String,
+		},
+	)
 
 	return content
 }
