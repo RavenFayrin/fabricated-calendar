@@ -7,7 +7,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/theme"
-	"fyne.io/fyne/v2/widget"
 )
 
 const MainTopDisplay = "main top"
@@ -21,27 +20,31 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 		calendarNames = append(calendarNames, dbCalendars[i].Name)
 	}
 
-	// Calendar Select
-	calendarSelect := widget.NewSelect(calendarNames, func(value string) {
-		for i := range dbCalendars {
-			if dbCalendars[i].Name == value {
-				g.Calendar = &dbCalendars[i]
-				err := g.fetchCalendarData()
-				if err != nil {
-					g.showError("Unable to select calendar.", err)
+	// Create Widget
+	calendarSelect := dropDown(
+		calendarNames,
+		func(value string) {
+			for i := range dbCalendars {
+				if dbCalendars[i].Name == value {
+					g.Calendar = &dbCalendars[i]
+					err := g.fetchCalendarData()
+					if err != nil {
+						g.showError("Unable to select calendar.", err)
+					}
+					g.DisplayMonthIndex = 0
+					g.DisplayYear = 0
+					break
 				}
-				g.DisplayMonthIndex = 0
-				g.DisplayYear = 0
-				break
 			}
-		}
 
-		g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
-		g.generateMainScreenLeftDisplay(MainLeftDisplay)
-	})
-	calendarSelect.PlaceHolder = "Select Calendar"
+			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			g.generateMainScreenLeftDisplay(MainLeftDisplay)
+		},
+		DropDownOptions{
+			PlaceHolder: "Select Calendar",
+		},
+	)
 
-	// Create Calendar Button
 	createCalendarButton := button(
 		func() {
 			g.generateMainScreenMiddleDisplay(CreateCalendarForm)
@@ -52,7 +55,6 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 		},
 	)
 
-	// Edit Calendar Button
 	editCalendarButton := button(
 		func() {
 			g.generateMainScreenMiddleDisplay(EditCalendarForm)
@@ -63,7 +65,6 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 		},
 	)
 
-	// Delete Calendar Button
 	deleteCalendarButton := button(
 		func() {
 			err := g.checkCalendarSelected()
@@ -86,21 +87,18 @@ func (g *GUI) mainScreenTopDisplay() fyne.CanvasObject {
 		},
 	)
 
-	calendarCard := widget.NewCard(
-		"",
-		"",
-		container.NewGridWithColumns(
-			4,
-			calendarSelect,
-			editCalendarButton,
-			deleteCalendarButton,
-			createCalendarButton,
-		),
-	)
+	calendarPallet := []fyne.CanvasObject{
+		calendarSelect,
+		editCalendarButton,
+		deleteCalendarButton,
+		createCalendarButton,
+	}
 
-	// Content Creator
-	content := container.NewPadded(
-		calendarCard,
+	content := paddedCard(
+		container.NewGridWithColumns(
+			len(calendarPallet),
+			calendarPallet...,
+		),
 	)
 
 	return content
