@@ -14,74 +14,75 @@ import (
 func (g *GUI) showCreateMonth() fyne.CanvasObject {
 	monthName := entry(
 		EntryOptions{
-			PlaceHolder: "Month Name",
+			PlaceHolder: "January",
 		},
 	)
 
 	monthOrder := entryNumerical(
 		EntryOptions{
-			PlaceHolder: "Month Order",
+			PlaceHolder: "1",
 		},
 	)
 
 	monthLength := entryNumerical(
 		EntryOptions{
-			PlaceHolder: "Month Length",
+			PlaceHolder: "31",
 		},
 	)
 
-	submitButton := button(
-		func() {
-			err := calendar.CreateMonth(
-				g.Config,
-				monthName.Text,
-				monthOrder.Text,
-				monthLength.Text,
-				g.Calendar.ID,
-				g.User.ID,
-			)
-			if err != nil {
-				g.showError("Unable to create month.", err)
-				return
-			}
-
-			err = g.fetchCalendarData()
-			if err != nil {
-				g.showError("Unable to update calendar.", err)
-				return
-			}
-
-			g.generateMainScreenLeftDisplay(MainLeftDisplay)
-			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Month Name",
+				Widget: monthName,
+			},
+			{
+				Label:  "Month Order",
+				Widget: monthOrder,
+			},
+			{
+				Label:  "Month Length",
+				Widget: monthLength,
+			},
 		},
-		ButtonOptions{
-			Text: "Create Month",
+		FormOptions{
+			SubmitText: "Create Month",
+			OnSubmit: func() {
+				err := calendar.CreateMonth(
+					g.Config,
+					monthName.Text,
+					monthOrder.Text,
+					monthLength.Text,
+					g.Calendar.ID,
+					g.User.ID,
+				)
+				if err != nil {
+					g.showError("Unable to create month.", err)
+					return
+				}
+
+				err = g.fetchCalendarData()
+				if err != nil {
+					g.showError("Unable to update calendar.", err)
+					return
+				}
+
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			},
 		},
 	)
 
-	closeButton := button(
-		func() {
-			g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		},
-		ButtonOptions{
-			Text: "Close",
+	content := paddedCard(
+		form,
+		CardOptions{
+			Text: "Create New Month",
 		},
 	)
-
-	content := container.NewPadded(
-		container.NewVBox(
-			textLabel(
-				"Create New Month",
-				LabelOptions{
-					Alignment: fyne.TextAlignCenter,
-					Bold:      true,
-				}),
-			monthName,
-			monthOrder,
-			monthLength,
-			submitButton,
-			closeButton,
-		))
 
 	return content
 }
@@ -89,74 +90,74 @@ func (g *GUI) showCreateMonth() fyne.CanvasObject {
 func (g *GUI) showEditMonth(monthID uuid.UUID) fyne.CanvasObject {
 	monthName := entry(
 		EntryOptions{
-			PlaceHolder: "Month Name",
+			PlaceHolder: "Febuary",
 		},
 	)
 
 	monthOrder := entryNumerical(
 		EntryOptions{
-			PlaceHolder: "Month Order",
+			PlaceHolder: "2",
 		},
 	)
 
 	monthLength := entryNumerical(
 		EntryOptions{
-			PlaceHolder: "Month Length",
+			PlaceHolder: "28",
 		},
 	)
 
-	submitButton := button(
-		func() {
-			err := calendar.UpdateMonth(
-				g.Config,
-				monthName.Text,
-				monthOrder.Text,
-				monthLength.Text,
-				monthID,
-			)
-			if err != nil {
-				g.showError("Unable to update month.", err)
-				return
-			}
-
-			err = g.fetchCalendarData()
-			if err != nil {
-				g.showError("Unable to update month.", err)
-				return
-			}
-
-			g.generateMainScreenLeftDisplay(MainLeftDisplay)
-			g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+	form := form(
+		[]FormItemOptions{
+			{
+				Label:  "Month Name",
+				Widget: monthName,
+			},
+			{
+				Label:  "Month Order",
+				Widget: monthOrder,
+			},
+			{
+				Label:  "Month Length",
+				Widget: monthLength,
+			},
 		},
-		ButtonOptions{
+		FormOptions{
+			SubmitText: "Update Month",
+			OnSubmit: func() {
+				err := calendar.UpdateMonth(
+					g.Config,
+					monthName.Text,
+					monthOrder.Text,
+					monthLength.Text,
+					monthID,
+				)
+				if err != nil {
+					g.showError("Unable to update month.", err)
+					return
+				}
+
+				err = g.fetchCalendarData()
+				if err != nil {
+					g.showError("Unable to update month.", err)
+					return
+				}
+
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+				g.generateMainScreenMiddleDisplay(MainMiddleDisplay)
+			},
+			CancelText: "Cancel",
+			OnCancel: func() {
+				g.generateMainScreenLeftDisplay(MainLeftDisplay)
+			},
+		},
+	)
+
+	content := paddedCard(
+		form,
+		CardOptions{
 			Text: "Update Month",
 		},
 	)
-
-	closeButton := button(
-		func() {
-			g.generateMainScreenLeftDisplay(MainLeftDisplay)
-		},
-		ButtonOptions{
-			Text: "Close",
-		},
-	)
-
-	content := container.NewPadded(
-		container.NewVBox(
-			textLabel(
-				"Update Month",
-				LabelOptions{
-					Alignment: fyne.TextAlignCenter,
-					Bold:      true,
-				},
-			),
-			monthName,
-			monthOrder,
-			monthLength,
-			submitButton,
-			closeButton,
-		))
 
 	return content
 }
