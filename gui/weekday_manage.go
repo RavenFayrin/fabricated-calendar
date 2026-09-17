@@ -79,24 +79,24 @@ func (g *GUI) showCreateWeekday() fyne.CanvasObject {
 func (g *GUI) showEditWeekday(weekdayID uuid.UUID) fyne.CanvasObject {
 	weekdayName := entry(
 		EntryOptions{
-			PlaceHolder: "Weekday Name",
+			PlaceHolder: "Monday",
 		},
 	)
 
 	weekdayOrder := entryNumerical(
 		EntryOptions{
-			PlaceHolder: "Weekday Order",
+			PlaceHolder: "2",
 		},
 	)
 
 	form := form(
 		[]FormItemOptions{
 			{
-				Label:  "Monday",
+				Label:  "Weekday Name",
 				Widget: weekdayName,
 			},
 			{
-				Label:  "2",
+				Label:  "Weekday Order",
 				Widget: weekdayOrder,
 			},
 		},
