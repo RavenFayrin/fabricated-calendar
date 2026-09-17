@@ -25,6 +25,6 @@ SET name = $1, shorthand = $2, start_year = $3, description = $4, updated_at = N
 WHERE id = $5
 RETURNING *;
 
--- name: DeleteMonth :exec
+-- name: DeleteEra :exec
 DELETE FROM era
 WHERE id = $1;
