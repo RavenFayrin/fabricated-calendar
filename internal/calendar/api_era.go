@@ -70,3 +70,11 @@ func UpdateEra(cfg config.Config, name, shorthand, startYear, description string
 
 	return nil
 }
+
+func DeleteEra(cfg config.Config, eraID uuid.UUID) error {
+	err := cfg.DB.DeleteEra(context.Background(), eraID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
