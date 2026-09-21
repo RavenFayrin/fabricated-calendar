@@ -15,20 +15,8 @@ func CreateEra(cfg config.Config, name, shorthand, startYear, description string
 		return err
 	}
 
-	var valDesc bool
-	var valShort bool
-
-	if description == "" {
-		valDesc = false
-	} else {
-		valDesc = true
-	}
-
-	if shorthand == "" {
-		valShort = false
-	} else {
-		valShort = true
-	}
+	valDesc := nullStringIdentifier(description)
+	valShort := nullStringIdentifier(shorthand)
 
 	_, err = cfg.DB.CreateEra(context.Background(), database.CreateEraParams{
 		Name: name,
@@ -45,5 +33,32 @@ func CreateEra(cfg config.Config, name, shorthand, startYear, description string
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func UpdateEra(cfg config.Config, name, shorthand, startYear, description string, eraID uuid.UUID) error {
+	valStartYear, err := stringToInt32(startYear)
+	if err != nil {
+		return err
+	}
+
+	valDesc := nullStringIdentifier(description)
+	valShort := nullStringIdentifier(shorthand)
+
+	_, err = cfg.DB.UpdateEraById(context.Background(), database.UpdateEraByIdParams{
+		Name: name,
+		Shorthand: sql.NullString{
+			String: shorthand,
+			Valid:  valShort},
+		StartYear: valStartYear,
+		Description: sql.NullString{
+			String: description,
+			Valid:  valDesc},
+		ID: eraID,
+	})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
