@@ -36,6 +36,14 @@ func CreateEra(cfg config.Config, name, shorthand, startYear, description string
 	return nil
 }
 
+func GetEras(cfg config.Config, calID uuid.UUID) ([]database.Era, error) {
+	eras, err := cfg.DB.GetErasByCalendarId(context.Background(), calID)
+	if err != nil {
+		return nil, err
+	}
+	return eras, nil
+}
+
 func UpdateEra(cfg config.Config, name, shorthand, startYear, description string, eraID uuid.UUID) error {
 	valStartYear, err := stringToInt32(startYear)
 	if err != nil {
