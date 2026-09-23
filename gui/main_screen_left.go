@@ -13,6 +13,8 @@ const CreateWeekdayForm = "create weekday form"
 const EditWeekdayForm = "edit weekday form"
 const CreateMonthForm = "create month form"
 const EditMonthForm = "edit month form"
+const CreateEraForm = "create era form"
+const EditEraForm = "edit era form"
 
 func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	err := g.checkCalendarSelected()
@@ -51,13 +53,30 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 		},
 	)
 
+	createEraButton := button(
+		func() {
+			err := g.checkCalendarSelected()
+			if err != nil {
+				g.showError("Calendar not selected.", err)
+				return
+			}
+
+			g.generateMainScreenLeftDisplay(CreateEraForm)
+		},
+		ButtonOptions{
+			Text: "+ Add Era",
+		},
+	)
+
 	// Retrieve Calendar Parts
 	dbWeekdays := g.getWeekdays()
 	dbMonths := g.getMonths()
+	dbEras := g.getEras()
 
 	// Show Calendar Parts
 	weekdayLabels := g.createWeekdayLables(dbWeekdays)
 	monthLabels := g.createMonthLables(dbMonths)
+	eraLabels := g.createEraLables(dbEras)
 
 	// Content
 	weekdayContent := container.NewVBox(
@@ -68,6 +87,11 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 	monthContent := container.NewVBox(
 		monthLabels,
 		createMonthButton,
+	)
+
+	eraContent := container.NewVBox(
+		eraLabels,
+		createEraButton,
 	)
 
 	// Calendar tools content
@@ -81,6 +105,10 @@ func (g *GUI) mainScreenLeftDisplay() fyne.CanvasObject {
 				{
 					Text:    "Months",
 					content: monthContent,
+				},
+				{
+					Text:    "Eras",
+					content: eraContent,
 				},
 			},
 			AccordionOptions{
@@ -136,6 +164,24 @@ func (g *GUI) generateMainScreenLeftDisplay(display string, args ...uuid.UUID) {
 		}
 		g.LeftContainer.Objects = []fyne.CanvasObject{
 			g.showEditMonth(args[0]),
+		}
+
+		g.LeftContainer.Refresh()
+
+	case CreateEraForm:
+		g.LeftContainer.Objects = []fyne.CanvasObject{
+			g.showCreateEra(),
+		}
+
+		g.LeftContainer.Refresh()
+
+	case EditEraForm:
+		if len(args) == 0 {
+			g.showError("Unable to edit era.", fmt.Errorf("era ID was not provided"))
+			return
+		}
+		g.LeftContainer.Objects = []fyne.CanvasObject{
+			g.showEditEra(args[0]),
 		}
 
 		g.LeftContainer.Refresh()
