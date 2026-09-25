@@ -91,7 +91,12 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 			Bold:      true,
 		},
 	)
+	currentEra := g.checkEraForDisplayYear(
+		g.getEraForYear(
+			g.getEras(),
+		))
 
+	// Display Creation
 	commandPallet := []fyne.CanvasObject{
 		monthSelection,
 		yearEntry,
@@ -115,7 +120,7 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 		),
 		CardOptions{
 			Text:         g.Calendar.Name,
-			SubtitleText: g.Calendar.Description.String,
+			SubtitleText: currentEra,
 		},
 	)
 
