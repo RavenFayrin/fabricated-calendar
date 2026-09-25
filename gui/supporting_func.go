@@ -3,6 +3,7 @@ package gui
 import (
 	"errors"
 	"fabricated-calendar/internal/calendar"
+	"fabricated-calendar/internal/database"
 	"fmt"
 
 	"fyne.io/fyne/v2"
@@ -46,4 +47,12 @@ func (g *GUI) checkCalendarData() error {
 		return fmt.Errorf("no months or weekday created")
 	}
 	return nil
+}
+
+func (g *GUI) checkEraForDisplayYear(era *database.Era) string {
+	if era == nil || era.ID == uuid.Nil {
+		return ""
+	}
+
+	return era.Name
 }
