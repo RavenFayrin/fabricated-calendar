@@ -240,3 +240,17 @@ func (g *GUI) getEras() []database.Era {
 
 	return dbEras
 }
+
+func (g *GUI) getEraForYear(eras []database.Era) *database.Era {
+	var currentEra *database.Era
+
+	for i := range eras {
+		if eras[i].StartYear > g.DisplayYear {
+			break
+		}
+
+		currentEra = &eras[i]
+	}
+
+	return currentEra
+}
