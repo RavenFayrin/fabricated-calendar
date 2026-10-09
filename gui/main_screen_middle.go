@@ -91,7 +91,12 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 			Bold:      true,
 		},
 	)
+	currentEra := g.checkEraForDisplayYear(
+		g.getEraForYear(
+			g.getEras(),
+		))
 
+	// Display Creation
 	commandPallet := []fyne.CanvasObject{
 		monthSelection,
 		yearEntry,
@@ -102,21 +107,23 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 		nextMonthButton,
 	}
 
-	content := paddedCard(
-		container.NewPadded(
+	content := container.NewVBox(
+		paddedCard(
+			container.NewGridWithColumns(
+				len(commandPallet),
+				commandPallet...,
+			),
+		),
+		paddedCard(
 			container.NewVBox(
-				container.NewGridWithColumns(
-					len(commandPallet),
-					commandPallet...,
-				),
 				weekdayGrid,
 				monthGrid,
 			),
+			CardOptions{
+				Text:         g.Calendar.Name,
+				SubtitleText: currentEra,
+			},
 		),
-		CardOptions{
-			Text:         g.Calendar.Name,
-			SubtitleText: g.Calendar.Description.String,
-		},
 	)
 
 	return content

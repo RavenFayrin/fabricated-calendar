@@ -10,13 +10,7 @@ import (
 )
 
 func CreateCalendar(cfg config.Config, name, desc string, userID uuid.UUID) error {
-	var val bool
-
-	if desc == "" {
-		val = false
-	} else {
-		val = true
-	}
+	val := nullStringIdentifier(desc)
 
 	_, err := cfg.DB.CreateCalendar(context.Background(), database.CreateCalendarParams{
 		Name: name,
@@ -41,13 +35,7 @@ func GetCalendars(cfg config.Config, userID uuid.UUID) ([]database.Calendar, err
 }
 
 func UpdateCalendar(cfg config.Config, name, desc string, calendarID uuid.UUID) error {
-	var val bool
-
-	if desc == "" {
-		val = false
-	} else {
-		val = true
-	}
+	val := nullStringIdentifier(desc)
 
 	_, err := cfg.DB.UpdateCalendarByID(context.Background(), database.UpdateCalendarByIDParams{
 		Name: name,

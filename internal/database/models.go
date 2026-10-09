@@ -20,6 +20,18 @@ type Calendar struct {
 	UserID      uuid.UUID
 }
 
+type Era struct {
+	ID          uuid.UUID
+	Name        string
+	Shorthand   sql.NullString
+	StartYear   int32
+	Description sql.NullString
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	CalendarID  uuid.UUID
+	UserID      uuid.UUID
+}
+
 type Month struct {
 	ID          uuid.UUID
 	Name        string
