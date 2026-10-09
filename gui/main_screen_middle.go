@@ -107,21 +107,23 @@ func (g *GUI) mainScreenMiddleCalendarDisplay() fyne.CanvasObject {
 		nextMonthButton,
 	}
 
-	content := paddedCard(
-		container.NewPadded(
+	content := container.NewVBox(
+		paddedCard(
+			container.NewGridWithColumns(
+				len(commandPallet),
+				commandPallet...,
+			),
+		),
+		paddedCard(
 			container.NewVBox(
-				container.NewGridWithColumns(
-					len(commandPallet),
-					commandPallet...,
-				),
 				weekdayGrid,
 				monthGrid,
 			),
+			CardOptions{
+				Text:         g.Calendar.Name,
+				SubtitleText: currentEra,
+			},
 		),
-		CardOptions{
-			Text:         g.Calendar.Name,
-			SubtitleText: currentEra,
-		},
 	)
 
 	return content
